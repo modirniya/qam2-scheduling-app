@@ -16,15 +16,17 @@ public class SqlDatabase {
     private static final String password = "12345";
     private static Connection connection = null;
 
+    private static final String TAG = "SqlDatabase";
+
     public static void connect() {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(jbdcUrl, username, password);
-            System.out.println("Connection established");
+            LogsManager.infoLog(TAG, "Connection established");
         } catch (ClassNotFoundException e) {
-            System.out.println("Class ''" + driver + "'' not found:\n" + e.getMessage());
+            LogsManager.errorLog(TAG, "Class ''" + driver + "'' not found:\n" + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("SQL error:\n" + e.getMessage());
+            LogsManager.errorLog(TAG, "SQL exception:\t" + e.getMessage());
         }
     }
 
@@ -32,12 +34,12 @@ public class SqlDatabase {
         try {
             if (connection != null) {
                 connection.close();
-                System.out.println("Connection has terminated successfully");
+                LogsManager.infoLog(TAG, "Connection has terminated successfully");
             } else {
-                System.out.println("There is no connection");
+                LogsManager.warningLog(TAG, "Attempted to close a connection that doesn't exist");
             }
         } catch (SQLException e) {
-            System.out.println("Sql error:" + e.getMessage());
+            LogsManager.errorLog(TAG, "Sql error:\t" + e.getMessage());
         }
     }
 
