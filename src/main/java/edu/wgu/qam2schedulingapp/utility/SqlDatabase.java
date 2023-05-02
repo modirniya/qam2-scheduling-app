@@ -1,9 +1,7 @@
 package edu.wgu.qam2schedulingapp.utility;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SqlDatabase {
     private static final String protocol = "jdbc";
@@ -40,6 +38,17 @@ public class SqlDatabase {
             }
         } catch (SQLException e) {
             LogsManager.errorLog(TAG, "Sql error:\t" + e.getMessage());
+        }
+    }
+
+    public static ResultSet executeForResult(String strStatement) {
+        try {
+            Statement statement = connection.createStatement();
+            return statement.executeQuery(strStatement);
+        } catch (SQLException e) {
+            LogsManager.errorLog(TAG, "SQL exception occurred while executing statement ->"
+                    + strStatement + "\n" + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

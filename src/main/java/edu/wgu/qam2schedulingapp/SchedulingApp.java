@@ -16,7 +16,7 @@ public class SchedulingApp extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(SchedulingApp.class.getResource("view/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Login");
+        stage.setTitle("Scheduling Management");
         stage.setScene(scene);
         stage.show();
     }

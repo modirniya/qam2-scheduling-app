@@ -18,14 +18,14 @@ public class LogsManager {
 
     private static void recordLog(LogType type, String origin, String content) {
         var buffer = new StringBuffer();
-        buffer.append(origin).append("\t");
         switch (type) {
             case Info -> buffer.append("[INFO]");
             case Warning -> buffer.append("[WARNING] ");
             case Error -> buffer.append("[ERROR] ");
         }
-        buffer.append("\t").append(content);
-        buffer.append("\t").append(ZonedDateTime.now());
+        buffer.append(" -- ").append(origin);
+        buffer.append(" -- [").append(content);
+        buffer.append("] -- ").append(ZonedDateTime.now());
         System.out.println(buffer);
         recordIntoFile(allLogsFileName, buffer.toString());
     }
@@ -42,11 +42,10 @@ public class LogsManager {
     }
 
     public static void loginLog(String user, boolean isSuccessful) {
-        var buffer = new StringBuffer();
-        buffer.append(user).append("'s attempt to login was ");
-        buffer.append(isSuccessful ? "successful" : "unsuccessful");
-        buffer.append("\t").append(ZonedDateTime.now());
-        recordIntoFile(loginActivityFileName, buffer.toString());
+        String buffer = "[LOGIN] --" + user + "-- Result: " +
+                (isSuccessful ? "SUCCESSFUL" : "UNSUCCESSFUL") +
+                "\t" + ZonedDateTime.now();
+        recordIntoFile(loginActivityFileName, buffer);
     }
 
     public static void infoLog(String origin, String content) {

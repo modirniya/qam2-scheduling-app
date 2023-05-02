@@ -2,12 +2,52 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="edu.wgu.qam2schedulingapp.controller.HomeController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.text.Font?>
 
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.wgu.qam2schedulingapp.controller.HomeController">
+    <padding>
+        <Insets bottom="12.0" top="12.0"/>
+    </padding>
+    <Label alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" text="Home" AnchorPane.leftAnchor="0.0"
+           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <font>
+            <Font size="24.0"/>
+        </font>
+    </Label>
+    <Separator layoutX="100.0" layoutY="57.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.topAnchor="40.0"/>
+    <VBox alignment="CENTER" prefWidth="100.0" spacing="16.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="60.0">
+        <Button mnemonicParsing="false" onAction="#showCustomersScreen" prefHeight="35.0" prefWidth="250.0"
+                text="Customers Management">
+            <font>
+                <Font name="System Bold" size="13.0"/>
+            </font>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#showAppointmentScreen" prefHeight="35.0" prefWidth="250.0"
+                text="Appointment Management" VBox.vgrow="ALWAYS">
+            <font>
+                <Font name="System Bold" size="13.0"/>
+            </font>
+        </Button>
+    </VBox>
+    <Label alignment="CENTER" text="Upcoming Appointment" AnchorPane.bottomAnchor="56.0" AnchorPane.leftAnchor="0.0"
+           AnchorPane.rightAnchor="0.0">
+        <font>
+            <Font name="System Bold" size="16.0"/>
+        </font>
+    </Label>
+    <Separator layoutX="100.0" layoutY="413.0" prefWidth="200.0" AnchorPane.bottomAnchor="40.0"
+               AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0"/>
+    <Label alignment="CENTER" layoutX="185.0" layoutY="284.0" text="No appointment in the next 15 minutes"
+           AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </Label>
+</AnchorPane>
