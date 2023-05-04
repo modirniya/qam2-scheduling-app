@@ -1,7 +1,7 @@
 package edu.wgu.qam2schedulingapp.repository;
 
 import edu.wgu.qam2schedulingapp.model.User;
-import edu.wgu.qam2schedulingapp.utility.LogsManager;
+import edu.wgu.qam2schedulingapp.utility.Logs;
 import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
 
 import java.sql.ResultSet;
@@ -26,7 +26,7 @@ public class LoginRepository {
                     return true;
                 }
         } catch (SQLException e) {
-            LogsManager.errorLog(TAG, "SQL exception occurred while retrieving password");
+            Logs.error(TAG, "SQL exception occurred while retrieving password");
             return false;
         }
         return false;

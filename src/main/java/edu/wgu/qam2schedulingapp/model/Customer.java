@@ -1,6 +1,8 @@
 package edu.wgu.qam2schedulingapp.model;
 
-import java.time.ZonedDateTime;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 public class Customer {
     private final int id;
@@ -11,20 +13,75 @@ public class Customer {
     private final String phone;
     private final String createdBy;
     private final String lastUpdatedBy;
-    private final ZonedDateTime createDate;
-    private final ZonedDateTime lastUpdate;
+    private final Date createDate;
+    private final Date lastUpdate;
 
-    public Customer(int id, int divisionId, String name, String address, String postalCode, String phone, String createdBy, String lastUpdatedBy, ZonedDateTime createDate, ZonedDateTime lastUpdate) {
+    public Customer(int id,
+                    String name,
+                    String phone,
+                    String address,
+                    String postalCode,
+                    String createdBy,
+                    Date createDate,
+                    String lastUpdatedBy,
+                    Date lastUpdate,
+                    int divisionId
+    ) {
         this.id = id;
-        this.divisionId = divisionId;
         this.name = name;
+        this.phone = phone;
         this.address = address;
         this.postalCode = postalCode;
-        this.phone = phone;
         this.createdBy = createdBy;
-        this.lastUpdatedBy = lastUpdatedBy;
         this.createDate = createDate;
+        this.lastUpdatedBy = lastUpdatedBy;
         this.lastUpdate = lastUpdate;
+        this.divisionId = divisionId;
+    }
+
+    public Customer(
+            String name,
+            String phone,
+            String address,
+            String postalCode,
+            int divisionId
+    ) {
+        this.id = -1;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.createdBy = null;
+        this.createDate = null;
+        this.lastUpdatedBy = null;
+        this.lastUpdate = null;
+        this.divisionId = divisionId;
+    }
+
+
+    public static Customer fromResultSet(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("Customer_ID");
+        int divisionId = resultSet.getInt("Division_ID");
+        String name = resultSet.getString("Customer_Name");
+        String address = resultSet.getString("Address");
+        String postalCode = resultSet.getString("Postal_Code");
+        String phone = resultSet.getString("Phone");
+        String createdBy = resultSet.getString("Created_By");
+        String lastUpdatedBy = resultSet.getString("Last_Updated_By");
+        Date createDate = resultSet.getTimestamp("Create_Date");
+        Date lastUpdate = resultSet.getTimestamp("Last_Update");
+
+        return new Customer(
+                id,
+                name,
+                phone,
+                address,
+                postalCode,
+                createdBy,
+                createDate,
+                lastUpdatedBy,
+                lastUpdate,
+                divisionId);
     }
 
     public int getId() {
@@ -59,11 +116,11 @@ public class Customer {
         return lastUpdatedBy;
     }
 
-    public ZonedDateTime getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public ZonedDateTime getLastUpdate() {
+    public Date getLastUpdate() {
         return lastUpdate;
     }
 }

@@ -20,11 +20,11 @@ public class SqlDatabase {
         try {
             Class.forName(driver);
             connection = DriverManager.getConnection(jbdcUrl, username, password);
-            LogsManager.infoLog(TAG, "Connection established");
+            Logs.info(TAG, "Connection established");
         } catch (ClassNotFoundException e) {
-            LogsManager.errorLog(TAG, "Class ''" + driver + "'' not found:\n" + e.getMessage());
+            Logs.error(TAG, "Class ''" + driver + "'' not found:\n" + e.getMessage());
         } catch (SQLException e) {
-            LogsManager.errorLog(TAG, "SQL exception:\t" + e.getMessage());
+            Logs.error(TAG, "SQL exception:\t" + e.getMessage());
         }
     }
 
@@ -32,12 +32,12 @@ public class SqlDatabase {
         try {
             if (connection != null) {
                 connection.close();
-                LogsManager.infoLog(TAG, "Connection has terminated successfully");
+                Logs.info(TAG, "Connection has terminated successfully");
             } else {
-                LogsManager.warningLog(TAG, "Attempted to close a connection that doesn't exist");
+                Logs.warning(TAG, "Attempted to close a connection that doesn't exist");
             }
         } catch (SQLException e) {
-            LogsManager.errorLog(TAG, "Sql error:\t" + e.getMessage());
+            Logs.error(TAG, "Sql error:\t" + e.getMessage());
         }
     }
 
@@ -46,11 +46,12 @@ public class SqlDatabase {
             Statement statement = connection.createStatement();
             return statement.executeQuery(strStatement);
         } catch (SQLException e) {
-            LogsManager.errorLog(TAG, "SQL exception occurred while executing statement ->"
+            Logs.error(TAG, "SQL exception occurred while executing statement ->"
                     + strStatement + "\n" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
 
     /**
      * @return connection

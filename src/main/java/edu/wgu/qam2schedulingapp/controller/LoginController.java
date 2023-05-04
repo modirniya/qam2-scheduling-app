@@ -2,9 +2,8 @@ package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.model.User;
 import edu.wgu.qam2schedulingapp.repository.LoginRepository;
-import edu.wgu.qam2schedulingapp.utility.LogsManager;
+import edu.wgu.qam2schedulingapp.utility.Logs;
 import edu.wgu.qam2schedulingapp.utility.ZoneHelper;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -35,11 +34,11 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle res) {
-        LogsManager.infoLog(TAG, "Initiating...");
+        Logs.initControllerLog(TAG);
         try {
             res = ResourceBundle.getBundle("edu.wgu.qam2schedulingapp.bundle.language", Locale.getDefault());
         } catch (Exception e) {
-            LogsManager.errorLog(TAG, e.getMessage());
+            Logs.error(TAG, e.getMessage());
         }
         lbUsername.setText(res.getString("lbUsername"));
         lbPassword.setText(res.getString("lbPassword"));
@@ -62,11 +61,11 @@ public class LoginController implements Initializable {
                 stage.setScene(scene);
                 stage.show();
             } catch (Exception e) {
-                LogsManager.errorLog(TAG, "IOException occurred while loading home.fxml\n" + e);
+                Logs.error(TAG, "IOException occurred while loading home.fxml\n" + e);
             }
         } else {
             lbError.setVisible(true);
         }
-        LogsManager.loginLog(user.getUsername(), loginSucceed);
+        Logs.loginLog(user.getUsername(), loginSucceed);
     }
 }

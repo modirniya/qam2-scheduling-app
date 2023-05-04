@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.ZonedDateTime;
 
-public class LogsManager {
+public class Logs {
 
     private enum LogType {
         Info,
@@ -24,8 +24,8 @@ public class LogsManager {
             case Error -> buffer.append("[ERROR] ");
         }
         buffer.append(" -- ").append(origin);
-        buffer.append(" -- [").append(content);
-        buffer.append("] -- ").append(ZonedDateTime.now());
+        buffer.append(" -- [ ").append(content);
+        buffer.append(" ] -- ").append(ZonedDateTime.now());
         System.out.println(buffer);
         recordIntoFile(allLogsFileName, buffer.toString());
     }
@@ -48,16 +48,19 @@ public class LogsManager {
         recordIntoFile(loginActivityFileName, buffer);
     }
 
-    public static void infoLog(String origin, String content) {
+    public static void info(String origin, String content) {
         recordLog(LogType.Info, origin, content);
     }
 
-    public static void errorLog(String origin, String content) {
+    public static void error(String origin, String content) {
         recordLog(LogType.Error, origin, content);
     }
 
-    public static void warningLog(String origin, String content) {
+    public static void warning(String origin, String content) {
         recordLog(LogType.Warning, origin, content);
     }
 
+    public static void initControllerLog(String origin) {
+        info(origin, "Initializing controller...");
+    }
 }

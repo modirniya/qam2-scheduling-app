@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="330.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.wgu.qam2schedulingapp.controller.HomeController">
     <padding>
         <Insets bottom="12.0" top="12.0"/>
@@ -35,19 +35,29 @@
                 <Font name="System Bold" size="13.0"/>
             </font>
         </Button>
+        <Button mnemonicParsing="false" onAction="#exit" prefHeight="35.0" prefWidth="250.0"
+                text="Exit">
+            <font>
+                <Font name="System Bold" size="13.0"/>
+            </font>
+        </Button>
     </VBox>
-    <Label alignment="CENTER" text="Upcoming Appointment" AnchorPane.bottomAnchor="56.0" AnchorPane.leftAnchor="0.0"
-           AnchorPane.rightAnchor="0.0">
-        <font>
-            <Font name="System Bold" size="16.0"/>
-        </font>
-    </Label>
-    <Separator layoutX="100.0" layoutY="413.0" prefWidth="200.0" AnchorPane.bottomAnchor="40.0"
-               AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0"/>
-    <Label alignment="CENTER" layoutX="185.0" layoutY="284.0" text="No appointment in the next 15 minutes"
-           AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <font>
-            <Font size="16.0"/>
-        </font>
-    </Label>
+    <VBox layoutY="242.0" spacing="8.0" style="-fx-border-color: gray; -fx-border-radius: 5;"
+          AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
+          AnchorPane.topAnchor="242.0">
+        <padding>
+            <Insets bottom="12.0" top="12.0"/>
+        </padding>
+        <Label alignment="CENTER" maxWidth="1000.0" text="Upcoming Appointment" VBox.vgrow="ALWAYS">
+            <font>
+                <Font name="System Bold" size="16.0"/>
+            </font>
+        </Label>
+        <Separator prefWidth="200.0"/>
+        <Label alignment="CENTER" maxWidth="1000.0" text="No appointment in the next 15 minutes">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+    </VBox>
 </AnchorPane>
