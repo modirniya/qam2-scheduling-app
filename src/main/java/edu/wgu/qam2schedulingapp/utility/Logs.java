@@ -24,8 +24,8 @@ public class Logs {
             case Error -> buffer.append("[ERROR] ");
         }
         buffer.append(" -- ").append(origin);
-        buffer.append(" -- [ ").append(content);
-        buffer.append(" ] -- ").append(ZonedDateTime.now());
+        buffer.append(":\t").append(content);
+        buffer.append("\t").append(ZonedDateTime.now().toLocalTime());
         System.out.println(buffer);
         recordIntoFile(allLogsFileName, buffer.toString());
     }

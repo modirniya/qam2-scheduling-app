@@ -40,13 +40,14 @@ public class Customer {
     }
 
     public Customer(
+            int id,
             String name,
             String phone,
             String address,
             String postalCode,
             int divisionId
     ) {
-        this.id = -1;
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.address = address;

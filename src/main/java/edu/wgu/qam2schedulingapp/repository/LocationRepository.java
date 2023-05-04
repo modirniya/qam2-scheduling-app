@@ -52,6 +52,7 @@ public class LocationRepository {
     }
 
     public static ObservableList<SPR> getAllSPRByCountryId(int countryId) {
+        Logs.info(TAG, "Getting all SPR by CountryId");
         String strStatement =
                 "SELECT Division_ID,Country_ID, Division " +
                         "FROM client_schedule.first_level_divisions " +
@@ -60,13 +61,14 @@ public class LocationRepository {
     }
 
     private static ObservableList<SPR> getAllSPR() {
+        Logs.info(TAG, "Getting all SPR");
         String strStatement = "SELECT Division_ID,Country_ID, Division " +
                 "FROM client_schedule.first_level_divisions";
         return getSPR(strStatement);
     }
 
     private static ObservableList<SPR> getSPR(String strStatement) {
-        Logs.info(TAG, "Getting All SPR");
+
         ObservableList<SPR> olResult = FXCollections.observableArrayList();
         try {
             var rsResult = SqlDatabase.executeForResult(strStatement);

@@ -56,5 +56,8 @@ public class CustomerController implements Initializable {
     }
 
     public void deleteCustomer() {
+        Customer target = tbAllCustomers.getSelectionModel().getSelectedItem();
+        if (target != null)
+            CustomerRepository.getInstance().deleteCustomer(target);
     }
 }

@@ -33,14 +33,40 @@ public class CustomerRepository {
         }
     }
 
-    public void addCustomer(Customer customer) {
+    public void updateCustomer(Customer customer) {
         var user = LoginRepository.getCurrentUser();
         try {
-            PreparedStatement statement = SqlDatabase.getConnection().prepareStatement(
-                    """
-                            INSERT INTO `client_schedule`.`customers`
-                            (`Customer_Name`,`Address`,`Postal_Code`,`Phone`,`Create_Date`,`Created_By`,`Last_Update`,`Last_Updated_By`,`Division_ID`)\s
-                            VALUES (?,?,?,?,UTC_TIMESTAMP(),?,UTC_TIMESTAMP(),?,?)""", Statement.RETURN_GENERATED_KEYS);
+            String strStatement = """
+                    UPDATE client_schedule.customers
+                        SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, 
+                        Last_Update = UTC_TIMESTAMP(), Last_Updated_By = ?, Division_ID = ?
+                        WHERE Customer_ID = ?""";
+            PreparedStatement statement = SqlDatabase.getConnection().prepareStatement(strStatement);
+            statement.setString(1, customer.getName());
+            statement.setString(2, customer.getAddress());
+            statement.setString(3, customer.getPostalCode());
+            statement.setString(4, customer.getPhone());
+            statement.setString(5, user.getUsername());
+            statement.setInt(6, customer.getDivisionId());
+            statement.setInt(7, customer.getId());
+            statement.executeUpdate();
+            statement.close();
+            refreshAllCustomersData();
+        } catch (SQLException e) {
+            Logs.error(TAG, "Exception occurred while updating customer");
+        }
+    }
+
+    public void addCustomer(Customer customer) {
+        var user = LoginRepository.getCurrentUser();
+        PreparedStatement statement;
+        try {
+            String strStatement = """
+                    INSERT INTO client_schedule.customers
+                        (Customer_Name,Address,Postal_Code,Phone,Create_Date,
+                        Created_By,Last_Update,Last_Updated_By,Division_ID)
+                        VALUES (?,?,?,?,UTC_TIMESTAMP(),?,UTC_TIMESTAMP(),?,?)""";
+            statement = SqlDatabase.getConnection().prepareStatement(strStatement, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
@@ -49,10 +75,10 @@ public class CustomerRepository {
             statement.setString(6, user.getUsername());
             statement.setInt(7, customer.getDivisionId());
             statement.executeUpdate();
+            statement.close();
+            refreshAllCustomersData();
         } catch (Exception e) {
             Logs.error(TAG, "Adding customer has failed");
-        } finally {
-            refreshAllCustomersData();
         }
     }
 
@@ -67,12 +93,16 @@ public class CustomerRepository {
         return allCustomers;
     }
 
-    public void updateCustomer(Customer customer) {
-
-    }
-
-    public boolean deleteCustomer(Customer customer) {
-        return false;
+    public void deleteCustomer(Customer customer) {
+        // TODO Make sure to delete appointment of this customer
+        String strStatement = "Delete FROM client_schedule.customers WHERE Customer_ID =" + customer.getId();
+        try {
+            SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
+        } catch (SQLException e) {
+            Logs.error(TAG, "Exception occurred while deleting the customer");
+        } finally {
+            refreshAllCustomersData();
+        }
     }
 }
 
