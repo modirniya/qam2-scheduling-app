@@ -14,22 +14,25 @@ public class LoginRepository {
     private static final String TAG = "LoginRepository";
 
     private static String statementPasswordRetrieval(String username) {
-        return "SELECT Password FROM client_schedule.users WHERE User_Name = \"" + username + "\"";
+        return "SELECT User_ID, User_Name, Password FROM client_schedule.users WHERE User_Name = \"" + username + "\"";
     }
 
     public static boolean loginUser(User user) {
         try {
             ResultSet result = SqlDatabase.executeForResult(statementPasswordRetrieval(user.getUsername()));
-            while (result.next())
-                if (result.getString("Password").equals(user.getPassword())) {
-                    currentUser = user;
-                    return true;
+            String password;
+            while (result.next()) {
+                password = result.getString("Password");
+                if (password.equals(user.getPassword())) {
+                    String username = result.getString("User_Name");
+                    int id = result.getInt("User_ID");
+                    currentUser = new User(id, username, password);
                 }
+            }
         } catch (SQLException e) {
             Logs.error(TAG, "SQL exception occurred while retrieving password");
-            return false;
         }
-        return false;
+        return currentUser != null;
     }
 
     public static User getCurrentUser() {

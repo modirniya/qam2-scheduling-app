@@ -14,15 +14,15 @@
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wgu.qam2schedulingapp.controller.CustomerController">
     <Label alignment="CENTER" layoutX="88.0" layoutY="44.0" text="Customers Management" AnchorPane.leftAnchor="0.0"
-           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="18.0">
+           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.0">
         <font>
             <Font name="System Bold" size="15.0"/>
         </font>
     </Label>
     <Separator layoutX="3.0" layoutY="62.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="52.0"/>
-    <TableView fx:id="tbAllCustomers" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="30.0"
-               AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="108.0">
+               AnchorPane.topAnchor="42.0"/>
+    <TableView fx:id="tbCustomers" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="84.0"
+               AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="50.0">
         <columns>
             <TableColumn prefWidth="50.0" text="ID">
                 <cellValueFactory>
@@ -76,19 +76,20 @@
             </TableColumn>
         </columns>
     </TableView>
-    <HBox layoutY="76.9000015258789" spacing="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
-          AnchorPane.topAnchor="60.0">
-        <Button maxWidth="1000.0" mnemonicParsing="false" onAction="#navigateBackToHome" prefHeight="35.0"
-                text="Back to Home" HBox.hgrow="ALWAYS"/>
-        <Button maxWidth="1000.0" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0" text="Add"
-                HBox.hgrow="ALWAYS"/>
-        <Button maxWidth="1000.0" mnemonicParsing="false" onAction="#modifyCustomer" prefHeight="35.0" text="Modify"
-                HBox.hgrow="ALWAYS"/>
-        <Button maxWidth="1000.0" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="35.0" text="Delete"
-                HBox.hgrow="ALWAYS"/>
+    <HBox layoutY="76.9000015258789" spacing="12.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="12.0"
+          AnchorPane.rightAnchor="12.0">
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateBackToHome"
+                prefHeight="35.0" text="Back to Home" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0"
+                text="Add" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyCustomer" prefHeight="35.0"
+                text="Modify" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="35.0"
+                text="Delete" HBox.hgrow="ALWAYS"/>
     </HBox>
-    <Label fx:id="lbEvent" style="-fx-border-color: gray; -fx-border-width: 1; -fx-border-radius: 2;"
-           AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
+    <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.bottomAnchor="28.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
+    <Label fx:id="lbEvent" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
         <padding>
             <Insets left="8.0" right="8.0"/>
         </padding>

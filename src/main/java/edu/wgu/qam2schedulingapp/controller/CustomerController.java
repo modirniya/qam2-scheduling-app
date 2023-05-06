@@ -22,7 +22,7 @@ public class CustomerController implements Initializable {
     private static final String TAG = "CustomerController";
     private static final String CUSTOMER_EDITOR_FXML = "/edu/wgu/qam2schedulingapp/view/customer-editor.fxml";
     //    private final Stage stageCustomerEditor = new Stage();
-    public TableView<Customer> tbAllCustomers;
+    public TableView<Customer> tbCustomers;
     public Label lbEvent;
     public TableColumn<Customer, Date> createdDate;
     public TableColumn<Customer, Date> lastUpdateDate;
@@ -31,13 +31,13 @@ public class CustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initControllerLog(TAG);
-        tbAllCustomers.setItems(CustomerRepository.getInstance().getAllCustomers());
+        tbCustomers.setItems(CustomerRepository.getInstance().getAllCustomers());
         createdDate.setCellFactory(getColumnTableCellCallback());
         lastUpdateDate.setCellFactory(getColumnTableCellCallback());
     }
 
     public void navigateBackToHome() {
-        Stage stage = (Stage) tbAllCustomers.getScene().getWindow();
+        Stage stage = (Stage) tbCustomers.getScene().getWindow();
         stage.close();
     }
 
@@ -64,7 +64,7 @@ public class CustomerController implements Initializable {
     }
 
     public void modifyCustomer() {
-        Customer target = tbAllCustomers.getSelectionModel().getSelectedItem();
+        Customer target = tbCustomers.getSelectionModel().getSelectedItem();
         if (target != null) {
             lbEvent.setText("");
             openCustomerEditor(target);
@@ -73,7 +73,7 @@ public class CustomerController implements Initializable {
     }
 
     public void deleteCustomer() {
-        Customer target = tbAllCustomers.getSelectionModel().getSelectedItem();
+        Customer target = tbCustomers.getSelectionModel().getSelectedItem();
         if (target != null) {
             lbEvent.setText("");
             var alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -94,9 +94,9 @@ public class CustomerController implements Initializable {
     private Callback<TableColumn<Customer, Date>, TableCell<Customer, Date>> getColumnTableCellCallback() {
         return col -> new TableCell<>() {
             @Override
-            protected void updateItem(Date date, boolean empty) {
-                super.updateItem(date, empty);
-                setText(empty || date == null ? null : tableDateFormat.format(date));
+            protected void updateItem(Date date, boolean isDateEmpty) {
+                super.updateItem(date, isDateEmpty);
+                setText(isDateEmpty ? null : tableDateFormat.format(date));
             }
         };
     }

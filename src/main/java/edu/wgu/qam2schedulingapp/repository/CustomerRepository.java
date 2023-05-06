@@ -16,6 +16,17 @@ public class CustomerRepository {
     private final ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private static CustomerRepository instance;
 
+    public static CustomerRepository getInstance() {
+        if (instance == null) {
+            instance = new CustomerRepository();
+        }
+        return instance;
+    }
+
+    public ObservableList<Customer> getAllCustomers() {
+        return allCustomers;
+    }
+
     private CustomerRepository() {
         refreshAllCustomersData();
     }
@@ -34,7 +45,6 @@ public class CustomerRepository {
     }
 
     public void updateCustomer(Customer customer) {
-        var user = LoginRepository.getCurrentUser();
         try {
             String strStatement = """
                     UPDATE client_schedule.customers
@@ -46,7 +56,7 @@ public class CustomerRepository {
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
             statement.setString(4, customer.getPhone());
-            statement.setString(5, user.getUsername());
+            statement.setString(5, LoginRepository.getCurrentUser().getUsername());
             statement.setInt(6, customer.getDivisionId());
             statement.setInt(7, customer.getId());
             statement.executeUpdate();
@@ -58,7 +68,7 @@ public class CustomerRepository {
     }
 
     public void addCustomer(Customer customer) {
-        var user = LoginRepository.getCurrentUser();
+        var username = LoginRepository.getCurrentUser().getUsername();
         PreparedStatement statement;
         try {
             String strStatement = """
@@ -71,8 +81,8 @@ public class CustomerRepository {
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
             statement.setString(4, customer.getPhone());
-            statement.setString(5, user.getUsername());
-            statement.setString(6, user.getUsername());
+            statement.setString(5, username);
+            statement.setString(6, username);
             statement.setInt(7, customer.getDivisionId());
             statement.executeUpdate();
             statement.close();
@@ -80,17 +90,6 @@ public class CustomerRepository {
         } catch (Exception e) {
             Logs.error(TAG, "Adding customer has failed");
         }
-    }
-
-    public static CustomerRepository getInstance() {
-        if (instance == null) {
-            instance = new CustomerRepository();
-        }
-        return instance;
-    }
-
-    public ObservableList<Customer> getAllCustomers() {
-        return allCustomers;
     }
 
     public void deleteCustomer(Customer customer) {

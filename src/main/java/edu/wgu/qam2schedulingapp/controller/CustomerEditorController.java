@@ -18,7 +18,9 @@ import java.util.ResourceBundle;
 
 public class CustomerEditorController implements Initializable {
 
+
     private Customer currentCustomer;
+
 
     public enum EditorMode {
         Add,
@@ -46,7 +48,7 @@ public class CustomerEditorController implements Initializable {
         cbCountry.setItems(LocationRepository.allCountries);
         cbCountry.getSelectionModel().selectedItemProperty().addListener(
                 (o, prevCountry, country) -> {
-                    Logs.info(TAG, "cbCountries onChangeListener triggered: prev->" + prevCountry + "\tcountry->" + country);
+                    Logs.info(TAG, "cbCountries onChangeListener triggered");
                     if (country != null) {
                         cbSPR.setDisable(false);
                         cbSPR.setItems(LocationRepository.getAllSPRByCountryId(country.getId()));
@@ -55,7 +57,8 @@ public class CustomerEditorController implements Initializable {
     }
 
     public void updateUI(EditorMode mode, Customer target) {
-        Logs.info(TAG, "Updating CustomerEditorController UI");
+        Logs.info(TAG, "Updating CustomerEditorController UI in " +
+                (mode == EditorMode.Add ? "adding" : "modifying") + " mode");
         currentCustomer = target;
         currentMode = mode;
         switch (mode) {
@@ -77,22 +80,23 @@ public class CustomerEditorController implements Initializable {
 
     public void applyChange() {
         if (areEntriesValid()) {
-            var customer = new Customer(
-                    currentMode == EditorMode.Add ? -1 : currentCustomer.getId(),
-                    tfName.getText(),
-                    tfPhone.getText(),
-                    tfAddress.getText(),
-                    tfPostalCode.getText(),
-                    cbSPR.getValue().getDivisionId());
+            Customer customer = new Customer();
+            customer.setId(currentCustomer.getId());
+            customer.setName(tfName.getText());
+            customer.setPhone(tfPhone.getText());
+            customer.setAddress(tfAddress.getText());
+            customer.setPostalCode(tfPostalCode.getText());
+            customer.setDivisionId(cbSPR.getValue().getDivisionId());
             switch (currentMode) {
                 case Add -> CustomerRepository.getInstance().addCustomer(customer);
                 case Modify -> CustomerRepository.getInstance().updateCustomer(customer);
             }
-            cancel();
+            closeEditor();
         }
     }
 
     private boolean areEntriesValid() {
+        Logs.info(TAG, "Validating customer entries");
         StringBuilder potentialErrors = new StringBuilder();
         if (tfName.getText().isBlank()) potentialErrors.append("\t‣ Name\n");
         if (tfPhone.getText().isBlank()) potentialErrors.append("\t‣ Phone\n");
@@ -101,6 +105,7 @@ public class CustomerEditorController implements Initializable {
         if (tfAddress.getText().isBlank()) potentialErrors.append("\t‣ Address\n");
         if (tfPostalCode.getText().isBlank()) potentialErrors.append("\t‣ Postal Code\n");
         if (!potentialErrors.isEmpty()) {
+            Logs.warning(TAG, "Validating customer entries has failed");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Incomplete Entries");
             alert.setHeaderText("Fields bellow cannot be empty!");
@@ -110,7 +115,8 @@ public class CustomerEditorController implements Initializable {
         return potentialErrors.isEmpty();
     }
 
-    public void cancel() {
+    public void closeEditor() {
+        Logs.info(TAG, "Closing the customer editor");
         Stage stage = (Stage) tfName.getScene().getWindow();
         stage.close();
     }
