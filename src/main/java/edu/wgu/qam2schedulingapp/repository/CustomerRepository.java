@@ -48,7 +48,7 @@ public class CustomerRepository {
         try {
             String strStatement = """
                     UPDATE client_schedule.customers
-                        SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, 
+                        SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?,
                         Last_Update = UTC_TIMESTAMP(), Last_Updated_By = ?, Division_ID = ?
                         WHERE Customer_ID = ?""";
             PreparedStatement statement = SqlDatabase.getConnection().prepareStatement(strStatement);
