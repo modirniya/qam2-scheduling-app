@@ -114,4 +114,19 @@ public class Customer {
         return phone;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
 }
