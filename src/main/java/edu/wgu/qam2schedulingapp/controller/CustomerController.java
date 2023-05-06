@@ -7,6 +7,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,23 +21,15 @@ import java.util.ResourceBundle;
 public class CustomerController implements Initializable {
     private static final String TAG = "CustomerController";
     private static final String CUSTOMER_EDITOR_FXML = "/edu/wgu/qam2schedulingapp/view/customer-editor.fxml";
-    private final Stage stageCustomerEditor = new Stage();
+    //    private final Stage stageCustomerEditor = new Stage();
     public TableView<Customer> tbAllCustomers;
-    private CustomerEditorController editorController;
+    public Label lbEvent;
+//    private CustomerEditorController editorController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initControllerLog(TAG);
         tbAllCustomers.setItems(CustomerRepository.getInstance().getAllCustomers());
-        FXMLLoader loaderCustomerEditor = new FXMLLoader(getClass().getResource(CUSTOMER_EDITOR_FXML));
-        try {
-            Parent parentCustomerEditor = loaderCustomerEditor.load();
-            editorController = loaderCustomerEditor.getController();
-            stageCustomerEditor.initModality(Modality.APPLICATION_MODAL);
-            stageCustomerEditor.setScene(new Scene(parentCustomerEditor));
-        } catch (IOException e) {
-            Logs.error(TAG, "Loading customer editor failed");
-        }
     }
 
     public void navigateBackToHome() {
@@ -42,22 +37,55 @@ public class CustomerController implements Initializable {
         stage.close();
     }
 
+    private void openCustomerEditor(Customer target) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(CUSTOMER_EDITOR_FXML));
+        try {
+            Parent parent = loader.load();
+            CustomerEditorController controller = loader.getController();
+            if (target != null)
+                controller.updateUI(CustomerEditorController.EditorMode.Modify, target);
+            else
+                controller.updateUI(CustomerEditorController.EditorMode.Add, null);
+            var stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(parent));
+            stage.showAndWait();
+        } catch (IOException e) {
+            Logs.error(TAG, "Loading customer editor failed");
+        }
+    }
+
     public void addCustomer() {
-        editorController.updateUI(CustomerEditorController.EditorMode.Add, null);
-        stageCustomerEditor.showAndWait();
+        openCustomerEditor(null);
     }
 
     public void modifyCustomer() {
         Customer target = tbAllCustomers.getSelectionModel().getSelectedItem();
         if (target != null) {
-            editorController.updateUI(CustomerEditorController.EditorMode.Modify, target);
-            stageCustomerEditor.showAndWait();
-        }
+            lbEvent.setText("");
+            openCustomerEditor(target);
+        } else
+            lbEvent.setText("Unknown target: Select the customer in the table and press modify again.");
     }
 
     public void deleteCustomer() {
         Customer target = tbAllCustomers.getSelectionModel().getSelectedItem();
-        if (target != null)
-            CustomerRepository.getInstance().deleteCustomer(target);
+        if (target != null) {
+            lbEvent.setText("");
+            var alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Removing customer");
+            alert.setHeaderText("Are you sure?");
+            alert.setContentText("This customer's information and all associated appointments with this customer will be gone irreversibly.");
+            alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresentOrElse(
+                    bt -> {
+                        CustomerRepository.getInstance().deleteCustomer(target);
+                        lbEvent.setText("Deletion successful: Customer has been removed from the database.");
+                    }, () -> {
+                        lbEvent.setText("Deletion aborted: No changes has been made to the database.");
+                    }
+            );
+        } else {
+            lbEvent.setText("Unknown target: Select the customer in the table and press delete again.");
+        }
     }
 }
