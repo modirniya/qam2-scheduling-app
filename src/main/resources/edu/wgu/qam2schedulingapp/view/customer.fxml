@@ -59,12 +59,12 @@
                     <PropertyValueFactory property="lastUpdatedBy"/>
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="100.0" text="Created">
+            <TableColumn fx:id="createdDate" prefWidth="100.0" text="Created">
                 <cellValueFactory>
                     <PropertyValueFactory property="createDate"/>
                 </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="100.0" text="Last Update">
+            <TableColumn fx:id="lastUpdateDate" prefWidth="100.0" text="Last Update">
                 <cellValueFactory>
                     <PropertyValueFactory property="lastUpdate"/>
                 </cellValueFactory>
@@ -87,7 +87,7 @@
         <Button maxWidth="1000.0" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="35.0" text="Delete"
                 HBox.hgrow="ALWAYS"/>
     </HBox>
-    <Label fx:id="lbEvent" style="-fx-border-color: gray; -fx-border-width: 1; -fx-border-radius: 3;"
+    <Label fx:id="lbEvent" style="-fx-border-color: gray; -fx-border-width: 1; -fx-border-radius: 2;"
            AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
         <padding>
             <Insets left="8.0" right="8.0"/>

@@ -7,15 +7,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
@@ -24,12 +24,16 @@ public class CustomerController implements Initializable {
     //    private final Stage stageCustomerEditor = new Stage();
     public TableView<Customer> tbAllCustomers;
     public Label lbEvent;
-//    private CustomerEditorController editorController;
+    public TableColumn<Customer, Date> createdDate;
+    public TableColumn<Customer, Date> lastUpdateDate;
+    private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initControllerLog(TAG);
         tbAllCustomers.setItems(CustomerRepository.getInstance().getAllCustomers());
+        createdDate.setCellFactory(getColumnTableCellCallback());
+        lastUpdateDate.setCellFactory(getColumnTableCellCallback());
     }
 
     public void navigateBackToHome() {
@@ -80,12 +84,20 @@ public class CustomerController implements Initializable {
                     bt -> {
                         CustomerRepository.getInstance().deleteCustomer(target);
                         lbEvent.setText("Deletion successful: Customer has been removed from the database.");
-                    }, () -> {
-                        lbEvent.setText("Deletion aborted: No changes has been made to the database.");
-                    }
+                    }, () -> lbEvent.setText("Deletion aborted: No changes has been made to the database.")
             );
         } else {
             lbEvent.setText("Unknown target: Select the customer in the table and press delete again.");
         }
+    }
+
+    private Callback<TableColumn<Customer, Date>, TableCell<Customer, Date>> getColumnTableCellCallback() {
+        return col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date date, boolean empty) {
+                super.updateItem(date, empty);
+                setText(empty || date == null ? null : tableDateFormat.format(date));
+            }
+        };
     }
 }
