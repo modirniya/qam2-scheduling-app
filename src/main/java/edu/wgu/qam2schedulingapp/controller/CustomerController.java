@@ -1,6 +1,7 @@
 package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.model.Customer;
+import edu.wgu.qam2schedulingapp.model.EditorMode;
 import edu.wgu.qam2schedulingapp.repository.CustomerRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
 import javafx.fxml.FXMLLoader;
@@ -31,25 +32,22 @@ public class CustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initControllerLog(TAG);
-        tbCustomers.setItems(CustomerRepository.getInstance().getAllCustomers());
+        tbCustomers.setItems(CustomerRepository.getInstance().allCustomers);
         createdDate.setCellFactory(getColumnTableCellCallback());
         lastUpdateDate.setCellFactory(getColumnTableCellCallback());
     }
 
-    public void navigateBackToHome() {
+    public void navigateToHome() {
         Stage stage = (Stage) tbCustomers.getScene().getWindow();
         stage.close();
     }
 
-    private void openCustomerEditor(Customer target) {
+    private void navigateToEditor(Customer target) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(CUSTOMER_EDITOR_FXML));
         try {
             Parent parent = loader.load();
             CustomerEditorController controller = loader.getController();
-            if (target != null)
-                controller.updateUI(CustomerEditorController.EditorMode.Modify, target);
-            else
-                controller.updateUI(CustomerEditorController.EditorMode.Add, null);
+            controller.updateUI(target);
             var stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(parent));
@@ -60,14 +58,14 @@ public class CustomerController implements Initializable {
     }
 
     public void addCustomer() {
-        openCustomerEditor(null);
+        navigateToEditor(null);
     }
 
     public void modifyCustomer() {
         Customer target = tbCustomers.getSelectionModel().getSelectedItem();
         if (target != null) {
             lbEvent.setText("");
-            openCustomerEditor(target);
+            navigateToEditor(target);
         } else
             lbEvent.setText("Unknown target: Select the customer in the table and press modify again.");
     }

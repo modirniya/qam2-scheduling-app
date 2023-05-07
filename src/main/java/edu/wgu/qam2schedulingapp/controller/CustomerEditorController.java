@@ -2,6 +2,7 @@ package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.model.Country;
 import edu.wgu.qam2schedulingapp.model.Customer;
+import edu.wgu.qam2schedulingapp.model.EditorMode;
 import edu.wgu.qam2schedulingapp.model.SPR;
 import edu.wgu.qam2schedulingapp.repository.CustomerRepository;
 import edu.wgu.qam2schedulingapp.repository.LocationRepository;
@@ -19,13 +20,8 @@ import java.util.ResourceBundle;
 public class CustomerEditorController implements Initializable {
 
 
-    private Customer currentCustomer;
+    private Customer customer;
 
-
-    public enum EditorMode {
-        Add,
-        Modify
-    }
 
     private static final String TAG = "CustomerEditorController";
     public TextField tfId;
@@ -36,7 +32,7 @@ public class CustomerEditorController implements Initializable {
     public ComboBox<SPR> cbSPR;
     public TextField tfPhone;
     public Label lbTitle;
-    private EditorMode currentMode;
+    private EditorMode mode;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -56,24 +52,24 @@ public class CustomerEditorController implements Initializable {
                 });
     }
 
-    public void updateUI(EditorMode mode, Customer target) {
+    public void updateUI(Customer customer) {
+        mode = customer == null ? EditorMode.Add : EditorMode.Modify;
         Logs.info(TAG, "Updating CustomerEditorController UI in " +
-                (mode == EditorMode.Add ? "adding" : "modifying") + " mode");
-        currentCustomer = target;
-        currentMode = mode;
+                       (mode == EditorMode.Add ? "adding" : "modifying") + " mode");
+        this.customer = customer;
         switch (mode) {
             case Add -> lbTitle.setText("Add Customer");
             case Modify -> {
-                SPR spr = LocationRepository.getSPRByDivisionId(target.getDivisionId());
-                Country country = LocationRepository.getCountryByDivisionId(target.getDivisionId());
+                SPR spr = LocationRepository.getSPRByDivisionId(customer.getDivisionId());
+                Country country = LocationRepository.getCountryByDivisionId(customer.getDivisionId());
                 cbCountry.setValue(country);
                 cbSPR.getSelectionModel().select(spr);
                 lbTitle.setText("Modify Customer");
-                tfId.setText(String.valueOf(target.getId()));
-                tfName.setText(target.getName());
-                tfAddress.setText(target.getAddress());
-                tfPhone.setText(target.getPhone());
-                tfPostalCode.setText(target.getPostalCode());
+                tfId.setText(String.valueOf(customer.getId()));
+                tfName.setText(customer.getName());
+                tfAddress.setText(customer.getAddress());
+                tfPhone.setText(customer.getPhone());
+                tfPostalCode.setText(customer.getPostalCode());
             }
         }
     }
@@ -81,13 +77,13 @@ public class CustomerEditorController implements Initializable {
     public void applyChange() {
         if (areEntriesValid()) {
             Customer customer = new Customer();
-            customer.setId(currentCustomer.getId());
+            customer.setId(this.customer.getId());
             customer.setName(tfName.getText());
             customer.setPhone(tfPhone.getText());
             customer.setAddress(tfAddress.getText());
             customer.setPostalCode(tfPostalCode.getText());
             customer.setDivisionId(cbSPR.getValue().getDivisionId());
-            switch (currentMode) {
+            switch (mode) {
                 case Add -> CustomerRepository.getInstance().addCustomer(customer);
                 case Modify -> CustomerRepository.getInstance().updateCustomer(customer);
             }

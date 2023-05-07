@@ -13,7 +13,7 @@ import java.sql.Statement;
 
 public class CustomerRepository {
     private final String TAG = "CustomerRepository";
-    private final ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
+    public final ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
     private static CustomerRepository instance;
 
     public static CustomerRepository getInstance() {
@@ -23,15 +23,11 @@ public class CustomerRepository {
         return instance;
     }
 
-    public ObservableList<Customer> getAllCustomers() {
-        return allCustomers;
-    }
-
     private CustomerRepository() {
-        refreshAllCustomersData();
+        fetchAllCustomers();
     }
 
-    private void refreshAllCustomersData() {
+    private void fetchAllCustomers() {
         allCustomers.clear();
         try {
             String statement = "SELECT * FROM client_schedule.customers";
@@ -61,7 +57,7 @@ public class CustomerRepository {
             statement.setInt(7, customer.getId());
             statement.executeUpdate();
             statement.close();
-            refreshAllCustomersData();
+            fetchAllCustomers();
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while updating customer");
         }
@@ -86,7 +82,7 @@ public class CustomerRepository {
             statement.setInt(7, customer.getDivisionId());
             statement.executeUpdate();
             statement.close();
-            refreshAllCustomersData();
+            fetchAllCustomers();
         } catch (Exception e) {
             Logs.error(TAG, "Adding customer has failed");
         }
@@ -100,7 +96,7 @@ public class CustomerRepository {
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while deleting the customer");
         } finally {
-            refreshAllCustomersData();
+            fetchAllCustomers();
         }
     }
 }

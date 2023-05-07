@@ -18,21 +18,21 @@ public class Customer {
     private Date createDate;
     private Date lastUpdate;
 
-    public static Customer fromResultSet(ResultSet resultSet) throws SQLException {
-        Customer customer = new Customer();
-        customer.id = resultSet.getInt("Customer_ID");
-        customer.divisionId = resultSet.getInt("Division_ID");
-        customer.name = resultSet.getString("Customer_Name");
-        customer.address = resultSet.getString("Address");
-        customer.postalCode = resultSet.getString("Postal_Code");
-        customer.phone = resultSet.getString("Phone");
-        customer.createdBy = resultSet.getString("Created_By");
-        customer.lastUpdatedBy = resultSet.getString("Last_Updated_By");
-        customer.createDate =
-                ZoneHelper.utcToSystemLocalDate(resultSet.getTimestamp("Create_Date"));
-        customer.lastUpdate =
-                ZoneHelper.utcToSystemLocalDate(resultSet.getTimestamp("Last_Update"));
-        return customer;
+    public static Customer fromResultSet(ResultSet rs) throws SQLException {
+        Customer c = new Customer();
+        c.id = rs.getInt("Customer_ID");
+        c.divisionId = rs.getInt("Division_ID");
+        c.name = rs.getString("Customer_Name");
+        c.address = rs.getString("Address");
+        c.postalCode = rs.getString("Postal_Code");
+        c.phone = rs.getString("Phone");
+        c.createdBy = rs.getString("Created_By");
+        c.lastUpdatedBy = rs.getString("Last_Updated_By");
+        c.createDate =
+                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
+        c.lastUpdate =
+                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
+        return c;
     }
 
 

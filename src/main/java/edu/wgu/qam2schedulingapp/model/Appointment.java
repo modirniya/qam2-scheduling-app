@@ -1,5 +1,7 @@
 package edu.wgu.qam2schedulingapp.model;
 
+import edu.wgu.qam2schedulingapp.utility.ZoneHelper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -17,26 +19,28 @@ public class Appointment {
     private String lastUpdatedBy;
     private Date start;
     private Date end;
-    private Date createdDate;
+    private Date createDate;
     private Date lastUpdate;
 
-    public static Appointment fromResultSet(ResultSet resultSet) throws SQLException {
-        Appointment appointment = new Appointment();
-        appointment.id = resultSet.getInt("Appointment_ID");
-        appointment.title = resultSet.getString("Title");
-        appointment.description = resultSet.getString("Description");
-        appointment.location = resultSet.getString("Location");
-        appointment.type = resultSet.getString("Type");
-        appointment.start = resultSet.getTimestamp("Start");
-        appointment.end = resultSet.getTimestamp("End");
-        appointment.createdDate = resultSet.getTimestamp("Create_Date");
-        appointment.createdBy = resultSet.getString("Created_By");
-        appointment.lastUpdate = resultSet.getTimestamp("Last_Update");
-        appointment.lastUpdatedBy = resultSet.getString("Last_Updated_By");
-        appointment.customerId = resultSet.getInt("Customer_ID");
-        appointment.userId = resultSet.getInt("User_ID");
-        appointment.contactId = resultSet.getInt("Contact_ID");
-        return appointment;
+    public static Appointment fromResultSet(ResultSet rs) throws SQLException {
+        Appointment ap = new Appointment();
+        ap.id = rs.getInt("Appointment_ID");
+        ap.title = rs.getString("Title");
+        ap.description = rs.getString("Description");
+        ap.location = rs.getString("Location");
+        ap.type = rs.getString("Type");
+        ap.start = ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Start"));
+        ap.end = ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("End"));
+        ap.createDate =
+                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
+        ap.createdBy = rs.getString("Created_By");
+        ap.lastUpdate =
+                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
+        ap.lastUpdatedBy = rs.getString("Last_Updated_By");
+        ap.customerId = rs.getInt("Customer_ID");
+        ap.userId = rs.getInt("User_ID");
+        ap.contactId = rs.getInt("Contact_ID");
+        return ap;
     }
 
     public int getId() {
@@ -135,12 +139,12 @@ public class Appointment {
         this.end = end;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Date getLastUpdate() {

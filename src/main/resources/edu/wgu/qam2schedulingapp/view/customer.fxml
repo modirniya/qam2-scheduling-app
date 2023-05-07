@@ -78,7 +78,7 @@
     </TableView>
     <HBox layoutY="76.9000015258789" spacing="12.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="12.0"
           AnchorPane.rightAnchor="12.0">
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateBackToHome"
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateToHome"
                 prefHeight="35.0" text="Back to Home" HBox.hgrow="ALWAYS"/>
         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0"
                 text="Add" HBox.hgrow="ALWAYS"/>
