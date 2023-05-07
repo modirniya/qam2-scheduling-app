@@ -12,10 +12,22 @@ import java.util.Objects;
 
 public class LocationRepository {
     private static final String TAG = "LocationRepository";
-    public static final ObservableList<Country> allCountries = getAllCountries();
-    public static final ObservableList<SPR> allSPR = getAllSPR();
+    private static LocationRepository instance;
 
-    public static Country getCountryByDivisionId(int divisionId) {
+    public final ObservableList<Country> allCountries = getAllCountries();
+
+    public final ObservableList<SPR> allSPR = getAllSPR();
+
+    private LocationRepository() {
+        Logs.initLog(TAG);
+    }
+
+    public static LocationRepository getInstance() {
+        if (instance == null) instance = new LocationRepository();
+        return instance;
+    }
+
+    public Country getCountryByDivisionId(int divisionId) {
         int countryId = Objects.requireNonNull(getSPRByDivisionId(divisionId)).getCountryId();
         for (Country country : allCountries)
             if (country.getId() == countryId)
@@ -25,7 +37,7 @@ public class LocationRepository {
         throw new RuntimeException();
     }
 
-    public static SPR getSPRByDivisionId(int divisionId) {
+    public SPR getSPRByDivisionId(int divisionId) {
         for (SPR spr : allSPR)
             if (spr.getDivisionId() == divisionId)
                 return spr;
@@ -34,7 +46,7 @@ public class LocationRepository {
         throw new RuntimeException();
     }
 
-    private static ObservableList<Country> getAllCountries() {
+    private ObservableList<Country> getAllCountries() {
         Logs.info(TAG, "Getting all countries");
         ObservableList<Country> olResult = FXCollections.observableArrayList();
         try {
@@ -51,23 +63,23 @@ public class LocationRepository {
         return olResult;
     }
 
-    public static ObservableList<SPR> getAllSPRByCountryId(int countryId) {
+    public ObservableList<SPR> getAllSPRByCountryId(int countryId) {
         Logs.info(TAG, "Getting all SPR by CountryId");
         String strStatement =
                 "SELECT Division_ID,Country_ID, Division " +
-                        "FROM client_schedule.first_level_divisions " +
-                        "WHERE Country_ID = " + countryId;
+                "FROM client_schedule.first_level_divisions " +
+                "WHERE Country_ID = " + countryId;
         return getSPR(strStatement);
     }
 
-    private static ObservableList<SPR> getAllSPR() {
+    private ObservableList<SPR> getAllSPR() {
         Logs.info(TAG, "Getting all SPR");
         String strStatement = "SELECT Division_ID,Country_ID, Division " +
-                "FROM client_schedule.first_level_divisions";
+                              "FROM client_schedule.first_level_divisions";
         return getSPR(strStatement);
     }
 
-    private static ObservableList<SPR> getSPR(String strStatement) {
+    private ObservableList<SPR> getSPR(String strStatement) {
 
         ObservableList<SPR> olResult = FXCollections.observableArrayList();
         try {

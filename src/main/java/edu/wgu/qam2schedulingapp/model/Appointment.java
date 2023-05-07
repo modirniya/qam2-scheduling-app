@@ -1,6 +1,6 @@
 package edu.wgu.qam2schedulingapp.model;
 
-import edu.wgu.qam2schedulingapp.utility.ZoneHelper;
+import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,13 +29,13 @@ public class Appointment {
         ap.description = rs.getString("Description");
         ap.location = rs.getString("Location");
         ap.type = rs.getString("Type");
-        ap.start = ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Start"));
-        ap.end = ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("End"));
+        ap.start = TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Start"));
+        ap.end = TimeHelper.utcToSystemLocalDate(rs.getTimestamp("End"));
         ap.createDate =
-                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
+                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
         ap.createdBy = rs.getString("Created_By");
         ap.lastUpdate =
-                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
+                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
         ap.lastUpdatedBy = rs.getString("Last_Updated_By");
         ap.customerId = rs.getInt("Customer_ID");
         ap.userId = rs.getInt("User_ID");

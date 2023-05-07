@@ -1,8 +1,8 @@
 package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.model.Customer;
-import edu.wgu.qam2schedulingapp.model.EditorMode;
 import edu.wgu.qam2schedulingapp.repository.CustomerRepository;
+import edu.wgu.qam2schedulingapp.repository.LocationRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,30 +11,34 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
     private static final String TAG = "CustomerController";
     private static final String CUSTOMER_EDITOR_FXML = "/edu/wgu/qam2schedulingapp/view/customer-editor.fxml";
-    //    private final Stage stageCustomerEditor = new Stage();
     public TableView<Customer> tbCustomers;
     public Label lbEvent;
-    public TableColumn<Customer, Date> createdDate;
-    public TableColumn<Customer, Date> lastUpdateDate;
+    public TableColumn<Customer, Integer> colSPR;
     private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Logs.initControllerLog(TAG);
+        Logs.initLog(TAG);
         tbCustomers.setItems(CustomerRepository.getInstance().allCustomers);
-        createdDate.setCellFactory(getColumnTableCellCallback());
-        lastUpdateDate.setCellFactory(getColumnTableCellCallback());
+        colSPR.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Integer sprId, boolean isDateEmpty) {
+                super.updateItem(sprId, isDateEmpty);
+                if (sprId != null) {
+                    var spr = LocationRepository.getInstance().getSPRByDivisionId(sprId);
+                    setText(spr.toString());
+                }
+            }
+        });
     }
 
     public void navigateToHome() {
@@ -89,13 +93,4 @@ public class CustomerController implements Initializable {
         }
     }
 
-    private Callback<TableColumn<Customer, Date>, TableCell<Customer, Date>> getColumnTableCellCallback() {
-        return col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Date date, boolean isDateEmpty) {
-                super.updateItem(date, isDateEmpty);
-                setText(isDateEmpty ? null : tableDateFormat.format(date));
-            }
-        };
-    }
 }

@@ -33,21 +33,22 @@ public class CustomerEditorController implements Initializable {
     public TextField tfPhone;
     public Label lbTitle;
     private EditorMode mode;
+    private final LocationRepository lr = LocationRepository.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Logs.initControllerLog(TAG);
+        Logs.initLog(TAG);
         populateCbCountries();
     }
 
     private void populateCbCountries() {
-        cbCountry.setItems(LocationRepository.allCountries);
+        cbCountry.setItems(lr.allCountries);
         cbCountry.getSelectionModel().selectedItemProperty().addListener(
                 (o, prevCountry, country) -> {
                     Logs.info(TAG, "cbCountries onChangeListener triggered");
                     if (country != null) {
                         cbSPR.setDisable(false);
-                        cbSPR.setItems(LocationRepository.getAllSPRByCountryId(country.getId()));
+                        cbSPR.setItems(lr.getAllSPRByCountryId(country.getId()));
                     }
                 });
     }
@@ -60,8 +61,8 @@ public class CustomerEditorController implements Initializable {
         switch (mode) {
             case Add -> lbTitle.setText("Add Customer");
             case Modify -> {
-                SPR spr = LocationRepository.getSPRByDivisionId(customer.getDivisionId());
-                Country country = LocationRepository.getCountryByDivisionId(customer.getDivisionId());
+                SPR spr = lr.getSPRByDivisionId(customer.getDivisionId());
+                Country country = lr.getCountryByDivisionId(customer.getDivisionId());
                 cbCountry.setValue(country);
                 cbSPR.getSelectionModel().select(spr);
                 lbTitle.setText("Modify Customer");
@@ -87,7 +88,7 @@ public class CustomerEditorController implements Initializable {
                 case Add -> CustomerRepository.getInstance().addCustomer(customer);
                 case Modify -> CustomerRepository.getInstance().updateCustomer(customer);
             }
-            closeEditor();
+            cancel();
         }
     }
 
@@ -111,7 +112,7 @@ public class CustomerEditorController implements Initializable {
         return potentialErrors.isEmpty();
     }
 
-    public void closeEditor() {
+    public void cancel() {
         Logs.info(TAG, "Closing the customer editor");
         Stage stage = (Stage) tfName.getScene().getWindow();
         stage.close();

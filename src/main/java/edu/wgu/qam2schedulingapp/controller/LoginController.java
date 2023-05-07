@@ -1,9 +1,8 @@
 package edu.wgu.qam2schedulingapp.controller;
 
-import edu.wgu.qam2schedulingapp.model.User;
-import edu.wgu.qam2schedulingapp.repository.LoginRepository;
+import edu.wgu.qam2schedulingapp.repository.UserRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.ZoneHelper;
+import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -34,7 +33,7 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle res) {
-        Logs.initControllerLog(TAG);
+        Logs.initLog(TAG);
         try {
             res = ResourceBundle.getBundle("edu.wgu.qam2schedulingapp.bundle.language", Locale.getDefault());
         } catch (Exception e) {
@@ -45,13 +44,14 @@ public class LoginController implements Initializable {
         btLogin.setText(res.getString("btLogin"));
         lbError.setText(res.getString("errLogin"));
 
-        String timeZoneText = res.getString("lbTimeZone") + "\t" + ZoneHelper.getTimeZone();
+        String timeZoneText = res.getString("lbTimeZone") + "\t" + TimeHelper.getTimeZone();
         lbTimeZone.setText(timeZoneText);
     }
 
     public void login() {
-        var user = new User(tfUsername.getText(), pfPassword.getText());
-        boolean loginSucceed = LoginRepository.loginUser(user);
+        var username = tfUsername.getText();
+        boolean loginSucceed = UserRepository.
+                getInstance().loginUser(username, pfPassword.getText());
         if (loginSucceed) {
             try {
                 Parent parent = FXMLLoader.load(
@@ -66,6 +66,6 @@ public class LoginController implements Initializable {
         } else {
             lbError.setVisible(true);
         }
-        Logs.loginLog(user.getUsername(), loginSucceed);
+        Logs.loginLog(username, loginSucceed);
     }
 }

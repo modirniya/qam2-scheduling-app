@@ -60,7 +60,7 @@ public class Logs {
         recordLog(LogType.Warning, origin, content);
     }
 
-    public static void initControllerLog(String origin) {
-        info(origin, "Initializing controller...");
+    public static void initLog(String origin) {
+        info(origin, "Initializing...");
     }
 }

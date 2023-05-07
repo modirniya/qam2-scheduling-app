@@ -22,7 +22,7 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Logs.initControllerLog(TAG);
+        Logs.initLog(TAG);
         FXMLLoader loaderCustomer = new FXMLLoader(getClass().getResource(CUSTOMER_FXML));
         FXMLLoader loaderAppointment = new FXMLLoader(getClass().getResource(APPOINTMENT_FXML));
         try {

@@ -24,6 +24,7 @@ public class CustomerRepository {
     }
 
     private CustomerRepository() {
+        Logs.initLog(TAG);
         fetchAllCustomers();
     }
 
@@ -52,7 +53,7 @@ public class CustomerRepository {
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
             statement.setString(4, customer.getPhone());
-            statement.setString(5, LoginRepository.getCurrentUser().getUsername());
+            statement.setString(5, UserRepository.getInstance().getCurrentUser().getUsername());
             statement.setInt(6, customer.getDivisionId());
             statement.setInt(7, customer.getId());
             statement.executeUpdate();
@@ -64,7 +65,7 @@ public class CustomerRepository {
     }
 
     public void addCustomer(Customer customer) {
-        var username = LoginRepository.getCurrentUser().getUsername();
+        var username = UserRepository.getInstance().getCurrentUser().getUsername();
         PreparedStatement statement;
         try {
             String strStatement = """

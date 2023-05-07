@@ -15,6 +15,7 @@ public class AppointmentRepository {
     private static AppointmentRepository instance;
 
     private AppointmentRepository() {
+        Logs.initLog(TAG);
         fetchAllAppointments();
     }
 
@@ -44,6 +45,6 @@ public class AppointmentRepository {
     public void updateAppointment() {
     }
 
-    public void removeAppointment() {
+    public void removeAppointment(Appointment appointment) {
     }
 }

@@ -1,6 +1,6 @@
 package edu.wgu.qam2schedulingapp.model;
 
-import edu.wgu.qam2schedulingapp.utility.ZoneHelper;
+import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,9 +29,9 @@ public class Customer {
         c.createdBy = rs.getString("Created_By");
         c.lastUpdatedBy = rs.getString("Last_Updated_By");
         c.createDate =
-                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
+                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
         c.lastUpdate =
-                ZoneHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
+                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
         return c;
     }
 
@@ -114,5 +114,10 @@ public class Customer {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(id);
     }
 }
