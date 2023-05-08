@@ -4,9 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -39,5 +37,31 @@ public class TimeHelper {
             }
         }
         return timeSlots;
+    }
+
+    public static LocalDate dateToLocalDate(Date start) {
+        LocalDateTime ldtStart =
+                start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return ldtStart.toLocalDate();
+    }
+
+
+    public static String dateToStringLocalTime(Date start) {
+        LocalDateTime ldtStart =
+                start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return ldtStart.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    public static Timestamp dateToUTCTimestamp(Date date) {
+        LocalDateTime ldt = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        ZonedDateTime zdt = ldt.atZone(ZoneId.systemDefault());
+        ZonedDateTime zdtUTC = zdt.withZoneSameInstant(ZoneOffset.UTC);
+        return Timestamp.valueOf(zdtUTC.toLocalDateTime());
+    }
+
+    public static Date strTimeAndDateToDate(LocalDate localDate, String strTime) {
+        LocalTime localTime = LocalTime.parse(strTime, DateTimeFormatter.ofPattern("H:mm"));
+        LocalDateTime ldt = LocalDateTime.of(localDate, localTime);
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

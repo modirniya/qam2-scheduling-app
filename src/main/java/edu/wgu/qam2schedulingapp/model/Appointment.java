@@ -15,10 +15,10 @@ public class Appointment {
     private String description;
     private String location;
     private String type;
-    private String createdBy;
-    private String lastUpdatedBy;
     private Date start;
     private Date end;
+    private String createdBy;
+    private String lastUpdatedBy;
     private Date createDate;
     private Date lastUpdate;
 
@@ -153,5 +153,25 @@ public class Appointment {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+               "id=" + id +
+               ", customerId=" + customerId +
+               ", userId=" + userId +
+               ", contactId=" + contactId +
+               ", title='" + title + '\'' +
+               ", description='" + description + '\'' +
+               ", location='" + location + '\'' +
+               ", type='" + type + '\'' +
+               ", start=" + start +
+               ", end=" + end +
+               ", createdBy='" + createdBy + '\'' +
+               ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
+               ", createDate=" + createDate +
+               ", lastUpdate=" + lastUpdate +
+               '}';
     }
 }

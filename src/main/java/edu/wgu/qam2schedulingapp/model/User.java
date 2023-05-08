@@ -9,24 +9,18 @@ public class User {
     private String password;
 
     public static User fromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("User_ID"));
-        user.setPassword(rs.getString("Password"));
-        user.setUsername(rs.getString("User_Name"));
-        return user;
+        User u = new User();
+        u.setId(rs.getInt("User_ID"));
+        u.setPassword(rs.getString("Password"));
+        u.setUsername(rs.getString("User_Name"));
+        return u;
     }
 
-//    public User(String username, String password) {
-//        this.id = -1;
-//        this.username = username;
-//        this.password = password;
-//    }
-//
-//    public User(int id, String username, String password) {
-//        this.id = id;
-//        this.username = username;
-//        this.password = password;
-//    }
+    public static User withOnlyId(int userId) {
+        User u = new User();
+        u.setId(userId);
+        return u;
+    }
 
     public String getUsername() {
         return username;

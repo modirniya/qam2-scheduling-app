@@ -9,12 +9,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class AppointmentController implements Initializable {
@@ -24,11 +29,17 @@ public class AppointmentController implements Initializable {
 
     public TableView<Appointment> tbAppointments;
     public Label lbEvent;
+    public TableColumn<Appointment, Date> tcStart;
+    public TableColumn<Appointment, Date> tcEnd;
+    private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
         tbAppointments.setItems(AppointmentRepository.getInstance().allAppointments);
+        tcStart.setCellFactory(getColumnTableCellCallback());
+        tcEnd.setCellFactory(getColumnTableCellCallback());
     }
 
     public void navigateToHome(ActionEvent actionEvent) {
@@ -75,5 +86,15 @@ public class AppointmentController implements Initializable {
     }
 
     public void generateReport(ActionEvent actionEvent) {
+    }
+
+    private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> getColumnTableCellCallback() {
+        return col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date date, boolean isDateEmpty) {
+                super.updateItem(date, isDateEmpty);
+                setText(isDateEmpty ? null : tableDateFormat.format(date));
+            }
+        };
     }
 }

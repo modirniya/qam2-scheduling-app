@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class CustomerRepository {
     private final String TAG = "CustomerRepository";
@@ -73,7 +72,7 @@ public class CustomerRepository {
                         (Customer_Name,Address,Postal_Code,Phone,Create_Date,
                         Created_By,Last_Update,Last_Updated_By,Division_ID)
                         VALUES (?,?,?,?,UTC_TIMESTAMP(),?,UTC_TIMESTAMP(),?,?)""";
-            statement = SqlDatabase.getConnection().prepareStatement(strStatement, Statement.RETURN_GENERATED_KEYS);
+            statement = SqlDatabase.getConnection().prepareStatement(strStatement);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
@@ -91,7 +90,7 @@ public class CustomerRepository {
 
     public void deleteCustomer(Customer customer) {
         // TODO Make sure to delete appointment of this customer
-        String strStatement = "Delete FROM client_schedule.customers WHERE Customer_ID =" + customer.getId();
+        String strStatement = "DELETE FROM client_schedule.customers WHERE Customer_ID =" + customer.getId();
         try {
             SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
         } catch (SQLException e) {

@@ -32,7 +32,7 @@ public class CustomerEditorController implements Initializable {
     public ComboBox<SPR> cbSPR;
     public TextField tfPhone;
     public Label lbTitle;
-    private EditorMode mode;
+    private EditorMode mode = EditorMode.Add;
     private final LocationRepository lr = LocationRepository.getInstance();
 
     @Override
@@ -54,31 +54,27 @@ public class CustomerEditorController implements Initializable {
     }
 
     public void updateUI(Customer customer) {
-        mode = customer == null ? EditorMode.Add : EditorMode.Modify;
         Logs.info(TAG, "Updating CustomerEditorController UI in " +
-                       (mode == EditorMode.Add ? "adding" : "modifying") + " mode");
-        this.customer = customer;
-        switch (mode) {
-            case Add -> lbTitle.setText("Add Customer");
-            case Modify -> {
-                SPR spr = lr.getSPRByDivisionId(customer.getDivisionId());
-                Country country = lr.getCountryByDivisionId(customer.getDivisionId());
-                cbCountry.setValue(country);
-                cbSPR.getSelectionModel().select(spr);
-                lbTitle.setText("Modify Customer");
-                tfId.setText(String.valueOf(customer.getId()));
-                tfName.setText(customer.getName());
-                tfAddress.setText(customer.getAddress());
-                tfPhone.setText(customer.getPhone());
-                tfPostalCode.setText(customer.getPostalCode());
-            }
+                       (customer != null ? "adding" : "modifying") + " mode");
+        if (customer != null) {
+            mode = EditorMode.Modify;
+            SPR spr = lr.getSPRByDivisionId(customer.getDivisionId());
+            Country country = lr.getCountryByDivisionId(customer.getDivisionId());
+            cbCountry.setValue(country);
+            cbSPR.getSelectionModel().select(spr);
+            lbTitle.setText("Modify Customer");
+            tfId.setText(String.valueOf(customer.getId()));
+            tfName.setText(customer.getName());
+            tfAddress.setText(customer.getAddress());
+            tfPhone.setText(customer.getPhone());
+            tfPostalCode.setText(customer.getPostalCode());
         }
     }
 
     public void applyChange() {
         if (areEntriesValid()) {
             Customer customer = new Customer();
-            customer.setId(this.customer.getId());
+            customer.setId(Integer.parseInt(tfId.getText()));
             customer.setName(tfName.getText());
             customer.setPhone(tfPhone.getText());
             customer.setAddress(tfAddress.getText());

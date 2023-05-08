@@ -9,11 +9,17 @@ public class Contact {
     private String email;
 
     public static Contact fromResultSet(ResultSet rs) throws SQLException {
-        Contact contact = new Contact();
-        contact.id = rs.getInt("Contact_ID");
-        contact.name = rs.getString("Contact_Name");
-        contact.email = rs.getString("Email");
-        return contact;
+        Contact c = new Contact();
+        c.id = rs.getInt("Contact_ID");
+        c.name = rs.getString("Contact_Name");
+        c.email = rs.getString("Email");
+        return c;
+    }
+
+    public static Contact withOnlyId(int contactId) {
+        Contact c = new Contact();
+        c.setId(contactId);
+        return c;
     }
 
     public int getId() {
@@ -42,6 +48,6 @@ public class Contact {
 
     @Override
     public String toString() {
-        return this.name;
+        return String.valueOf(this.id);
     }
 }
