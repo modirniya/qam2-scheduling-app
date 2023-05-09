@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class TimeHelper {
@@ -28,15 +29,36 @@ public class TimeHelper {
 
     public static ObservableList<String> getBusinessHours(int hoursOffset) {
         ObservableList<String> timeSlots = FXCollections.observableArrayList();
-        var openingHour = 5;
-        var closingHour = 18;
-        for (int hour = openingHour + hoursOffset; hour <= closingHour + hoursOffset; hour++) {
-            for (int mins = 0; mins < 4; mins++) {
-                if (hour == closingHour + hoursOffset && mins != 0) break;
-                timeSlots.add(hour + ":" + (mins != 0 ? (mins * 15) : "00"));
-            }
+        var openingHour = 8 + hoursOffset + getTimezoneDifferenceToEST();
+        var closingHour = 21 + hoursOffset + getTimezoneDifferenceToEST();
+//        for (int hour = openingHour; hour <= closingHour; hour++) {
+//            for (int mins = 0; mins < 4; mins++) {
+//                if (hour == closingHour && mins != 0) break;
+//                timeSlots.add((hour > 9 ? hour : "0" + hour) + ":" + (mins != 0 ? (mins * 15) : "00"));
+//            }
+//        }
+        int hour, minute;
+        String time;
+        for (double d = openingHour; d <= closingHour; d += 0.25) {
+            hour = ((int) (d - (d % 1))) % 24;
+            minute = (int) ((d % 1) * 60);
+            time = (hour > 9 ? hour : ("0" + hour)) + ":" + (minute == 0 ? "00" : minute);
+            timeSlots.add(time);
         }
         return timeSlots;
+    }
+
+    public static double getTimezoneDifferenceToEST() {
+        ZoneId systemZone = ZoneId.systemDefault();
+        ZoneId estZone = ZoneId.of("America/New_York");
+
+        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime systemZonedDateTime = now.atZone(systemZone);
+        ZonedDateTime estZonedDateTime = now.atZone(estZone);
+
+        double hoursDifference = ChronoUnit.MINUTES.between(systemZonedDateTime, estZonedDateTime);
+
+        return hoursDifference / 60.0;
     }
 
     public static LocalDate dateToLocalDate(Date start) {
@@ -60,7 +82,7 @@ public class TimeHelper {
     }
 
     public static Date strTimeAndDateToDate(LocalDate localDate, String strTime) {
-        LocalTime localTime = LocalTime.parse(strTime, DateTimeFormatter.ofPattern("H:mm"));
+        LocalTime localTime = LocalTime.parse(strTime, DateTimeFormatter.ofPattern("HH:mm"));
         LocalDateTime ldt = LocalDateTime.of(localDate, localTime);
         return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }

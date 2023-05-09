@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -22,9 +23,15 @@
                 <Font name="System Bold" size="15.0"/>
             </font>
         </Label>
-        <RadioButton mnemonicParsing="false" text="Current Week"/>
-        <RadioButton mnemonicParsing="false" text="Current Month"/>
-        <RadioButton mnemonicParsing="false" text="All Appointments"/>
+        <RadioButton mnemonicParsing="false" onAction="#showCurrentWeek" text="Current Week">
+            <toggleGroup>
+                <ToggleGroup fx:id="appFilter"/>
+            </toggleGroup>
+        </RadioButton>
+        <RadioButton mnemonicParsing="false" onAction="#showCurrentMonth" text="Current Month"
+                     toggleGroup="$appFilter"/>
+        <RadioButton mnemonicParsing="false" onAction="#showAllAppointments" selected="true" text="All Appointments"
+                     toggleGroup="$appFilter"/>
     </HBox>
     <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                AnchorPane.topAnchor="62.0"/>

@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class AppointmentEditorController implements Initializable {
@@ -119,25 +120,48 @@ public class AppointmentEditorController implements Initializable {
 
     private boolean areEntriesValid() {
         StringBuilder potentialErrors = new StringBuilder();
-        if (tfTitle.getText().isBlank()) potentialErrors.append("\t‣ Title cannot be empty\n");
-        if (tfType.getText().isBlank()) potentialErrors.append("\t‣ Type cannot be empty\n");
-        if (tfLocation.getText().isBlank()) potentialErrors.append("\t‣ Location cannot be empty\n");
-        if (tfDescription.getText().isBlank()) potentialErrors.append("\t‣ Description cannot be empty\n");
-        if (cbCustomerId.getValue() == null) potentialErrors.append("\t‣ Customer ID must be assigned\n");
-        if (cbUserId.getValue() == null) potentialErrors.append("\t‣ User ID must be assigned\n");
-        if (cbContact.getValue() == null) potentialErrors.append("\t‣ Contact ID must be assigned\n");
-        if (dpStart.getValue() == null) potentialErrors.append("\t‣ Start date must be assigned\n");
-        if (cbStartTime.getValue() == null) potentialErrors.append("\t‣ Start time must be assigned\n");
-        if (dpEnd.getValue() == null) potentialErrors.append("\t‣ End date must be assigned\n");
-        if (cbEndTime.getValue() == null) potentialErrors.append("\t‣ End time must be assigned\n");
+        if (tfTitle.getText().isBlank()) potentialErrors.append(decorate("Title cannot be empty"));
+        if (tfType.getText().isBlank()) potentialErrors.append(decorate("Type cannot be empty"));
+        if (tfLocation.getText().isBlank()) potentialErrors.append(decorate("Location cannot be empty"));
+        if (tfDescription.getText().isBlank()) potentialErrors.append(decorate("Description cannot be empty"));
+        if (cbCustomerId.getValue() == null) potentialErrors.append(decorate("Customer ID must be assigned"));
+        if (cbUserId.getValue() == null) potentialErrors.append(decorate("User ID must be assigned"));
+        if (cbContact.getValue() == null) potentialErrors.append(decorate("Contact ID must be assigned"));
+        var dateStart = dpStart.getValue();
+        var timeStart = cbStartTime.getValue();
+        var dateEnd = dpEnd.getValue();
+        var timeEnd = cbEndTime.getValue();
+        if (dateStart == null) potentialErrors.append(decorate("Start date must be assigned"));
+        if (timeStart == null) potentialErrors.append(decorate("Start time must be assigned"));
+        if (dateEnd == null) potentialErrors.append(decorate("End date must be assigned"));
+        if (timeEnd == null) potentialErrors.append(decorate("End time must be assigned"));
+        if (dateStart != null && timeStart != null
+            && dateEnd != null && timeEnd != null) {
+            var start = TimeHelper.strTimeAndDateToDate(dateStart, timeStart);
+            var end = TimeHelper.strTimeAndDateToDate(dateEnd, timeEnd);
+            validateDates(potentialErrors, start, end);
+        }
         if (!potentialErrors.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Entries are not valid");
-            alert.setHeaderText("The following issues needs to be addressed before going any further:");
+            alert.setHeaderText("The following issue(s) need to be addressed before going any further");
             alert.setContentText(potentialErrors.toString());
             alert.showAndWait();
         }
         return potentialErrors.isEmpty();
+    }
+
+    private void validateDates(StringBuilder potentialErrors, Date start, Date end) {
+        if (!(start.before(end)))
+            potentialErrors.append(decorate("An appointment must end at least 15 minutes after it starts"));
+        if (!(
+                AppointmentRepository.getInstance().checkTimeSlotAvailability(
+                        start, end, mode == EditorMode.Modify ? Integer.parseInt(tfAppointmentId.getText()) : -1)))
+            potentialErrors.append(decorate("Time slot is not available since it is overlapping another appointment"));
+    }
+
+    private String decorate(String entry) {
+        return "\t‣ " + entry + "\n";
     }
 
 

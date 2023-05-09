@@ -10,16 +10,19 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class AppointmentRepository {
+    private enum FilterType {
+        None,
+        Weekly,
+        Monthly
+    }
+
+    private FilterType currentFilter = FilterType.None;
     private final String TAG = "AppointmentRepository";
     public final ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
     private static AppointmentRepository instance;
-
-    private AppointmentRepository() {
-        Logs.initLog(TAG);
-        fetchAllAppointments();
-    }
 
     public static AppointmentRepository getInstance() {
         if (instance == null)
@@ -27,10 +30,19 @@ public class AppointmentRepository {
         return instance;
     }
 
-    private void fetchAllAppointments() {
+    private AppointmentRepository() {
+        Logs.initLog(TAG);
+        fetchAppointments();
+    }
+
+    private void fetchAppointments() {
         allAppointments.clear();
+        String statement = "SELECT * FROM client_schedule.appointments";
+        switch (currentFilter) {
+            case Weekly -> statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) = YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
+            case Monthly -> statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
+        }
         try {
-            String statement = "SELECT * FROM client_schedule.appointments";
             ResultSet resultSet = SqlDatabase.executeForResult(statement);
             while (resultSet.next()) {
                 allAppointments.add(Appointment.fromResultSet(resultSet));
@@ -56,7 +68,7 @@ public class AppointmentRepository {
         try {
             ps = SqlDatabase.getConnection().prepareStatement(strStatement);
             ps.setString(11, username);
-            populateCommonsThenExecute(ap, ps, username);
+            populateCommonStatementsThenExecute(ap, ps, username);
         } catch (SQLException e) {
             Logs.error(TAG, "Adding appointment has failed");
             throw new RuntimeException(e);
@@ -77,7 +89,7 @@ public class AppointmentRepository {
                     WHERE Appointment_ID = ?""";
             ps = SqlDatabase.getConnection().prepareStatement(strStatement);
             ps.setInt(11, ap.getId());
-            populateCommonsThenExecute(ap, ps, UserRepository.getInstance().getCurrentUser().getUsername());
+            populateCommonStatementsThenExecute(ap, ps, UserRepository.getInstance().getCurrentUser().getUsername());
         } catch (SQLException e) {
             Logs.error(TAG, "Updating appointment has failed");
             throw new RuntimeException(e);
@@ -92,11 +104,26 @@ public class AppointmentRepository {
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while deleting the customer");
         } finally {
-            fetchAllAppointments();
+            fetchAppointments();
         }
     }
 
-    private void populateCommonsThenExecute(Appointment ap, PreparedStatement ps, String username) throws SQLException {
+    public void filterWeekly() {
+        currentFilter = FilterType.Weekly;
+        fetchAppointments();
+    }
+
+    public void filterMonthly() {
+        currentFilter = FilterType.Monthly;
+        fetchAppointments();
+    }
+
+    public void removeFilter() {
+        currentFilter = FilterType.None;
+        fetchAppointments();
+    }
+
+    private void populateCommonStatementsThenExecute(Appointment ap, PreparedStatement ps, String username) throws SQLException {
         ps.setString(1, ap.getTitle());
         ps.setString(2, ap.getDescription());
         ps.setString(3, ap.getLocation());
@@ -109,6 +136,22 @@ public class AppointmentRepository {
         ps.setString(10, username);
         ps.executeUpdate();
         ps.close();
-        fetchAllAppointments();
+        fetchAppointments();
+    }
+
+    public boolean checkTimeSlotAvailability(Date start, Date end, int id) {
+        for (Appointment appointment : allAppointments) {
+            if (appointment.getId() == id) break;
+            Date appointmentStart = appointment.getStart();
+            Date appointmentEnd = appointment.getEnd();
+            if ((start.equals(appointmentStart)) || (end.equals(appointmentEnd)) ||
+                (start.after(appointmentStart) && start.before(appointmentEnd)) ||
+                (end.after(appointmentStart) && end.before(appointmentEnd)) ||
+                (appointmentStart.after(start) && appointmentStart.before(end)) ||
+                (appointmentEnd.after(start) && appointmentEnd.before(end))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

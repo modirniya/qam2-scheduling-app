@@ -3,15 +3,13 @@ package edu.wgu.qam2schedulingapp.controller;
 import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
+import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -32,11 +30,12 @@ public class AppointmentController implements Initializable {
     public TableColumn<Appointment, Date> tcStart;
     public TableColumn<Appointment, Date> tcEnd;
     private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
-
+    public ToggleGroup appFilter;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
+        Logs.info(TAG, String.valueOf(TimeHelper.getTimezoneDifferenceToEST()));
         tbAppointments.setItems(AppointmentRepository.getInstance().allAppointments);
         tcStart.setCellFactory(getColumnTableCellCallback());
         tcEnd.setCellFactory(getColumnTableCellCallback());
@@ -96,5 +95,17 @@ public class AppointmentController implements Initializable {
                 setText(isDateEmpty ? null : tableDateFormat.format(date));
             }
         };
+    }
+
+    public void showCurrentWeek(ActionEvent actionEvent) {
+        AppointmentRepository.getInstance().filterWeekly();
+    }
+
+    public void showCurrentMonth(ActionEvent actionEvent) {
+        AppointmentRepository.getInstance().filterMonthly();
+    }
+
+    public void showAllAppointments(ActionEvent actionEvent) {
+        AppointmentRepository.getInstance().removeFilter();
     }
 }
