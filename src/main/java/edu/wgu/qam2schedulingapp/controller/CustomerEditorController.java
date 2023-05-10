@@ -74,7 +74,7 @@ public class CustomerEditorController implements Initializable {
     public void applyChange() {
         if (areEntriesValid()) {
             Customer customer = new Customer();
-            customer.setId(Integer.parseInt(tfId.getText()));
+            if (mode == EditorMode.Modify) customer.setId(Integer.parseInt(tfId.getText()));
             customer.setName(tfName.getText());
             customer.setPhone(tfPhone.getText());
             customer.setAddress(tfAddress.getText());

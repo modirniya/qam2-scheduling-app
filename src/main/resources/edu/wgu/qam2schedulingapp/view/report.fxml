@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.wgu.qam2schedulingapp.controller.ReportController">
+    <Label alignment="CENTER" layoutX="98.0" layoutY="54.0" text="Appointment Reports" AnchorPane.leftAnchor="0.0"
+           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="16.0">
+        <font>
+            <Font name="System Bold" size="18.0"/>
+        </font>
+    </Label>
+    <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.topAnchor="48.0"/>
+    <TabPane layoutX="300.0" layoutY="150.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0"
+             tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0"
+             AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="60.0">
+        <Tab closable="false" text="By Contact">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <TableView fx:id="tbAppointments" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0">
+                    <columns>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="50.0" text="ID">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="id"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Title">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="title"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Type">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="type"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="tcStart" maxWidth="1.7976931348623157E308" prefWidth="110.0" text="Start">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="start"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="tcEnd" maxWidth="1.7976931348623157E308" prefWidth="110.0" text="End">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="end"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="100.0" text="Location">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="location"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Customer ID">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="customerId"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="75.0" text="User ID">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="userId"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Contact ID">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="contactId"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn maxWidth="1.7976931348623157E308" prefWidth="180.0" text="Description">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="description"/>
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+                <ComboBox fx:id="cbContact" layoutX="608.0" layoutY="4.0" prefWidth="150.0" promptText="Contact"
+                          AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0"/>
+            </AnchorPane>
+        </Tab>
+        <Tab closable="false" text="By Type and Month">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <TableView layoutX="250.0" layoutY="41.0" prefHeight="200.0" prefWidth="200.0"
+                           AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                           AnchorPane.topAnchor="0.0">
+                    <columns>
+                        <TableColumn prefWidth="120.0" text="Type"/>
+                        <TableColumn prefWidth="120.0" text="Month"/>
+                        <TableColumn prefWidth="75.0" text="Count"/>
+                    </columns>
+                </TableView>
+            </AnchorPane>
+        </Tab>
+        <Tab closable="false" text="By Username and Year">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <TableView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                        <TableColumn prefWidth="120.0" text="Username"/>
+                        <TableColumn prefWidth="75.0" text="Year"/>
+                        <TableColumn prefWidth="75.0" text="Count"/>
+                    </columns>
+                </TableView>
+            </AnchorPane>
+        </Tab>
+    </TabPane>
+</AnchorPane>

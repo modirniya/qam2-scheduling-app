@@ -16,13 +16,13 @@
 <AnchorPane prefHeight="350.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.wgu.qam2schedulingapp.controller.AppointmentEditorController">
     <Label fx:id="lbTitle" alignment="CENTER" layoutX="108.0" layoutY="64.0" text="Add Appointment"
-           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.0">
+           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="16.0">
         <font>
-            <Font name="System Bold" size="15.0"/>
+            <Font name="System Bold" size="18.0"/>
         </font>
     </Label>
     <Separator layoutX="23.0" layoutY="82.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="42.0"/>
+               AnchorPane.topAnchor="48.0"/>
     <GridPane hgap="18.0" layoutX="200.0" layoutY="155.0" maxWidth="-Infinity" prefWidth="700.0" vgap="8.0"
               AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="60.0">
         <columnConstraints>
@@ -42,12 +42,12 @@
         <Label text="Appointment ID" GridPane.columnIndex="2" GridPane.halignment="RIGHT"/>
         <Label text="Title" GridPane.halignment="RIGHT"/>
         <Label text="Description" GridPane.halignment="RIGHT" GridPane.rowIndex="3"/>
-        <TextField fx:id="tfAppointmentId" maxWidth="100.0" disable="true" promptText="Unknown"
+        <TextField fx:id="tfAppointmentId" disable="true" maxWidth="100.0" promptText="Unknown"
                    GridPane.columnIndex="3"/>
-        <TextField fx:id="tfTitle" GridPane.columnIndex="1"/>
-        <TextField fx:id="tfType" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-        <TextField fx:id="tfLocation" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-        <TextField fx:id="tfDescription" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <TextField fx:id="tfTitle" text="Test" GridPane.columnIndex="1"/>
+        <TextField fx:id="tfType" text="Test" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <TextField fx:id="tfLocation" text="Test" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <TextField fx:id="tfDescription" text="Test" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
         <Label text="Customer ID" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
         <Label text="User ID" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
         <ComboBox fx:id="cbCustomerId" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1"/>

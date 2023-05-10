@@ -1,6 +1,7 @@
 package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.model.Customer;
+import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.repository.CustomerRepository;
 import edu.wgu.qam2schedulingapp.repository.LocationRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -22,23 +24,14 @@ public class CustomerController implements Initializable {
     private static final String CUSTOMER_EDITOR_FXML = "/edu/wgu/qam2schedulingapp/view/customer-editor.fxml";
     public TableView<Customer> tbCustomers;
     public Label lbEvent;
-    public TableColumn<Customer, Integer> colSPR;
+    public TableColumn<Customer, Integer> tcSPR;
     private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
         tbCustomers.setItems(CustomerRepository.getInstance().allCustomers);
-        colSPR.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Integer sprId, boolean isDateEmpty) {
-                super.updateItem(sprId, isDateEmpty);
-                if (sprId != null) {
-                    var spr = LocationRepository.getInstance().getSPRByDivisionId(sprId);
-                    setText(spr.toString());
-                }
-            }
-        });
+        tcSPR.setCellFactory(getColumnTableCellCallback());
     }
 
     public void navigateToHome() {
@@ -84,6 +77,7 @@ public class CustomerController implements Initializable {
             alert.setContentText("This customer's information and all associated appointments with this customer will be gone irreversibly.");
             alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresentOrElse(
                     bt -> {
+                        AppointmentRepository.getInstance().removeAppointmentsOfCustomer(target.getId());
                         CustomerRepository.getInstance().deleteCustomer(target);
                         lbEvent.setText("Deletion successful: Customer has been removed from the database.");
                     }, () -> lbEvent.setText("Deletion aborted: No changes has been made to the database.")
@@ -91,6 +85,18 @@ public class CustomerController implements Initializable {
         } else {
             lbEvent.setText("Unknown target: Select the customer in the table and press delete again.");
         }
+    }
+
+    private Callback<TableColumn<Customer, Integer>,
+            TableCell<Customer, Integer>> getColumnTableCellCallback() {
+        return col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Integer sprId, boolean isEmpty) {
+                super.updateItem(sprId, isEmpty);
+                setText(isEmpty ? null :
+                        LocationRepository.getInstance().getSPRByDivisionId(sprId).toString());
+            }
+        };
     }
 
 }

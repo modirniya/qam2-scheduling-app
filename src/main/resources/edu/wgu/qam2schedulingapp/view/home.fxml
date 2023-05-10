@@ -8,21 +8,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="330.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="380.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.wgu.qam2schedulingapp.controller.HomeController">
-    <padding>
-        <Insets bottom="12.0" top="12.0"/>
-    </padding>
     <Label alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" text="Home" AnchorPane.leftAnchor="0.0"
-           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="16.0">
         <font>
-            <Font size="24.0"/>
+            <Font size="18.0"/>
         </font>
     </Label>
     <Separator layoutX="100.0" layoutY="57.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="40.0"/>
+               AnchorPane.topAnchor="48.0"/>
     <VBox alignment="CENTER" prefWidth="100.0" spacing="16.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-          AnchorPane.topAnchor="60.0">
+          AnchorPane.topAnchor="72.0">
         <Button mnemonicParsing="false" onAction="#showCustomersScreen" prefHeight="35.0" prefWidth="250.0"
                 text="Customers Management">
             <font>
@@ -35,16 +32,19 @@
                 <Font name="System Bold" size="13.0"/>
             </font>
         </Button>
-        <Button mnemonicParsing="false" onAction="#exit" prefHeight="35.0" prefWidth="250.0"
-                text="Exit">
+        <Button mnemonicParsing="false" onAction="#showReportScreen" prefHeight="35.0" prefWidth="250.0" text="Reports">
+            <font>
+                <Font name="System Bold" size="13.0"/>
+            </font>
+        </Button>
+        <Button mnemonicParsing="false" onAction="#exit" prefHeight="35.0" prefWidth="250.0" text="Exit">
             <font>
                 <Font name="System Bold" size="13.0"/>
             </font>
         </Button>
     </VBox>
     <VBox layoutY="242.0" spacing="8.0" style="-fx-border-color: gray; -fx-border-radius: 5;"
-          AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
-          AnchorPane.topAnchor="242.0">
+          AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
         <padding>
             <Insets bottom="12.0" top="12.0"/>
         </padding>

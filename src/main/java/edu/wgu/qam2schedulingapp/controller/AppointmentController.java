@@ -3,7 +3,6 @@ package edu.wgu.qam2schedulingapp.controller;
 import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +34,6 @@ public class AppointmentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
-        Logs.info(TAG, String.valueOf(TimeHelper.getTimezoneDifferenceToEST()));
         tbAppointments.setItems(AppointmentRepository.getInstance().allAppointments);
         tcStart.setCellFactory(getColumnTableCellCallback());
         tcEnd.setCellFactory(getColumnTableCellCallback());
@@ -76,9 +74,16 @@ public class AppointmentController implements Initializable {
     }
 
     public void deleteAppointment(ActionEvent actionEvent) {
+        lbEvent.setText("");
         Appointment appointment = tbAppointments.getSelectionModel().getSelectedItem();
         if (appointment != null) {
-            lbEvent.setText("");
+            var alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Removing appointment");
+            alert.setHeaderText("Are you sure?");
+            alert.setContentText("This appointment information will be gone irreversibly.");
+            alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresentOrElse(
+                    bt -> AppointmentRepository.getInstance().removeAppointment(appointment), () -> lbEvent.setText("Deletion aborted: No changes has been made to the database.")
+            );
             AppointmentRepository.getInstance().removeAppointment(appointment);
         } else
             lbEvent.setText("Unknown target: Select the appointment in the table and press modify again.");

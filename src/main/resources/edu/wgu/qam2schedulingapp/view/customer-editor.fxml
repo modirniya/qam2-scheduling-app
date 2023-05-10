@@ -15,13 +15,13 @@
 <AnchorPane prefHeight="300.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.wgu.qam2schedulingapp.controller.CustomerEditorController">
     <Label fx:id="lbTitle" alignment="CENTER" layoutX="98.0" layoutY="54.0" text="Add Customer"
-           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.0">
+           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="16.0">
         <font>
-            <Font name="System Bold" size="15.0"/>
+            <Font name="System Bold" size="18.0"/>
         </font>
     </Label>
     <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-               AnchorPane.topAnchor="42.0"/>
+               AnchorPane.topAnchor="48.0"/>
     <GridPane hgap="30.0" vgap="16.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0"
               AnchorPane.topAnchor="60.0">
         <columnConstraints>
@@ -37,7 +37,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
         </rowConstraints>
-        <TextField fx:id="tfId" disable="true" maxWidth="80.0" text="Unknown" GridPane.columnIndex="1"
+        <TextField fx:id="tfId" disable="true" maxWidth="100.0" text="Auto Generate" GridPane.columnIndex="1"
                    GridPane.hgrow="NEVER"/>
         <Label text="Customer ID" GridPane.halignment="RIGHT"/>
         <Label text="Name" GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>

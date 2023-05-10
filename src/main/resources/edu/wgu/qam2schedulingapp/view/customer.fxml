@@ -11,77 +11,87 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wgu.qam2schedulingapp.controller.CustomerController">
-    <Label alignment="CENTER" layoutX="88.0" layoutY="44.0" text="Customers Management" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.0">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.wgu.qam2schedulingapp.controller.CustomerController">
+    <Label alignment="CENTER" layoutX="88.0" layoutY="44.0" text="Customers Management" AnchorPane.leftAnchor="0.0"
+           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="16.0">
         <font>
-            <Font name="System Bold" size="15.0" />
+            <Font name="System Bold" size="18.0"/>
         </font>
     </Label>
-    <Separator layoutX="3.0" layoutY="62.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0" />
-    <TableView fx:id="tbCustomers" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="84.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="50.0">
+    <Separator layoutX="3.0" layoutY="62.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+               AnchorPane.topAnchor="48.0"/>
+    <TableView fx:id="tbCustomers" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="84.0"
+               AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="60.0">
         <columns>
             <TableColumn prefWidth="50.0" text="ID">
                 <cellValueFactory>
-                    <PropertyValueFactory property="id" />
+                    <PropertyValueFactory property="id"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn prefWidth="140.0" text="Name">
                 <cellValueFactory>
-                    <PropertyValueFactory property="name" />
+                    <PropertyValueFactory property="name"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn prefWidth="200.0" text="Address">
                 <cellValueFactory>
-                    <PropertyValueFactory property="address" />
+                    <PropertyValueFactory property="address"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn text="Postal Code">
                 <cellValueFactory>
-                    <PropertyValueFactory property="postalCode" />
+                    <PropertyValueFactory property="postalCode"/>
                 </cellValueFactory>
             </TableColumn>
             <TableColumn prefWidth="100.0" text="Phone">
                 <cellValueFactory>
-                    <PropertyValueFactory property="phone" />
+                    <PropertyValueFactory property="phone"/>
                 </cellValueFactory>
             </TableColumn>
-<!--            <TableColumn prefWidth="100.0" text="Created By">-->
-<!--                <cellValueFactory>-->
-<!--                    <PropertyValueFactory property="createdBy"/>-->
-<!--                </cellValueFactory>-->
-<!--            </TableColumn>-->
-<!--            <TableColumn prefWidth="100.0" text="Last Update By">-->
-<!--                <cellValueFactory>-->
-<!--                    <PropertyValueFactory property="lastUpdatedBy"/>-->
-<!--                </cellValueFactory>-->
-<!--            </TableColumn>-->
-<!--            <TableColumn fx:id="createdDate" prefWidth="100.0" text="Created">-->
-<!--                <cellValueFactory>-->
-<!--                    <PropertyValueFactory property="createDate"/>-->
-<!--                </cellValueFactory>-->
-<!--            </TableColumn>-->
-<!--            <TableColumn fx:id="lastUpdateDate" prefWidth="100.0" text="Last Update">-->
-<!--                <cellValueFactory>-->
-<!--                    <PropertyValueFactory property="lastUpdate"/>-->
-<!--                </cellValueFactory>-->
-<!--            </TableColumn>-->
-            <TableColumn fx:id="colSPR" prefWidth="140.0" text="State/Province/Region">
+            <!--            <TableColumn prefWidth="100.0" text="Created By">-->
+            <!--                <cellValueFactory>-->
+            <!--                    <PropertyValueFactory property="createdBy"/>-->
+            <!--                </cellValueFactory>-->
+            <!--            </TableColumn>-->
+            <!--            <TableColumn prefWidth="100.0" text="Last Update By">-->
+            <!--                <cellValueFactory>-->
+            <!--                    <PropertyValueFactory property="lastUpdatedBy"/>-->
+            <!--                </cellValueFactory>-->
+            <!--            </TableColumn>-->
+            <!--            <TableColumn fx:id="createdDate" prefWidth="100.0" text="Created">-->
+            <!--                <cellValueFactory>-->
+            <!--                    <PropertyValueFactory property="createDate"/>-->
+            <!--                </cellValueFactory>-->
+            <!--            </TableColumn>-->
+            <!--            <TableColumn fx:id="lastUpdateDate" prefWidth="100.0" text="Last Update">-->
+            <!--                <cellValueFactory>-->
+            <!--                    <PropertyValueFactory property="lastUpdate"/>-->
+            <!--                </cellValueFactory>-->
+            <!--            </TableColumn>-->
+            <TableColumn fx:id="tcSPR" prefWidth="140.0" text="State/Province/Region">
                 <cellValueFactory>
-                    <PropertyValueFactory property="divisionId" />
+                    <PropertyValueFactory property="divisionId"/>
                 </cellValueFactory>
             </TableColumn>
         </columns>
     </TableView>
-    <HBox layoutY="76.9000015258789" spacing="12.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateToHome" prefHeight="35.0" text="Back to Home" HBox.hgrow="ALWAYS" />
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0" text="Add" HBox.hgrow="ALWAYS" />
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyCustomer" prefHeight="35.0" text="Modify" HBox.hgrow="ALWAYS" />
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="35.0" text="Delete" HBox.hgrow="ALWAYS" />
+    <HBox layoutY="76.9000015258789" spacing="12.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="12.0"
+          AnchorPane.rightAnchor="12.0">
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#navigateToHome" prefHeight="35.0"
+                text="Back to Home" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addCustomer" prefHeight="35.0"
+                text="Add" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyCustomer" prefHeight="35.0"
+                text="Modify" HBox.hgrow="ALWAYS"/>
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteCustomer" prefHeight="35.0"
+                text="Delete" HBox.hgrow="ALWAYS"/>
     </HBox>
-    <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.bottomAnchor="28.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+    <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.bottomAnchor="28.0"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
     <Label fx:id="lbEvent" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0">
         <padding>
-            <Insets left="8.0" right="8.0" />
+            <Insets left="8.0" right="8.0"/>
         </padding>
     </Label>
 </AnchorPane>

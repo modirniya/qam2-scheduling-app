@@ -16,11 +16,11 @@
 <AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.wgu.qam2schedulingapp.controller.AppointmentController">
-    <HBox alignment="CENTER_RIGHT" layoutY="12.0" spacing="36.0" AnchorPane.leftAnchor="12.0"
-          AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="24.0">
+    <HBox alignment="CENTER_RIGHT" layoutY="12.0" spacing="36.0" AnchorPane.leftAnchor="24.0"
+          AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="16.0">
         <Label maxWidth="1.7976931348623157E308" text="Appointment Management" HBox.hgrow="ALWAYS">
             <font>
-                <Font name="System Bold" size="15.0"/>
+                <Font name="System Bold" size="18.0"/>
             </font>
         </Label>
         <RadioButton mnemonicParsing="false" onAction="#showCurrentWeek" text="Current Week">
@@ -121,8 +121,6 @@
                 prefHeight="35.0" text="Modify" HBox.hgrow="ALWAYS"/>
         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteAppointment"
                 prefHeight="35.0" text="Delete" HBox.hgrow="ALWAYS"/>
-        <Button disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#generateReport"
-                prefHeight="35.0" text="Generate report" HBox.hgrow="ALWAYS"/>
     </HBox>
     <Label fx:id="lbEvent" layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="12.0"
            AnchorPane.rightAnchor="12.0">

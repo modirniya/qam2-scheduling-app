@@ -38,6 +38,7 @@ public class CustomerRepository {
         } catch (SQLException e) {
             Logs.error(TAG, "Fetching all customers has failed");
         }
+        Logs.info(TAG, "Customers list has updated and currently has " + allCustomers.size() + " item(s)");
     }
 
     public void updateCustomer(Customer customer) {
@@ -93,10 +94,9 @@ public class CustomerRepository {
         String strStatement = "DELETE FROM client_schedule.customers WHERE Customer_ID =" + customer.getId();
         try {
             SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
+            fetchAllCustomers();
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while deleting the customer");
-        } finally {
-            fetchAllCustomers();
         }
     }
 }

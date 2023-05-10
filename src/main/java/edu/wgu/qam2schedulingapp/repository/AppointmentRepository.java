@@ -39,8 +39,10 @@ public class AppointmentRepository {
         allAppointments.clear();
         String statement = "SELECT * FROM client_schedule.appointments";
         switch (currentFilter) {
-            case Weekly -> statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) = YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
-            case Monthly -> statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
+            case Weekly ->
+                    statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) = YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
+            case Monthly ->
+                    statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
         }
         try {
             ResultSet resultSet = SqlDatabase.executeForResult(statement);
@@ -101,10 +103,19 @@ public class AppointmentRepository {
         String strStatement = "DELETE FROM client_schedule.appointments WHERE Appointment_ID =" + appointment.getId();
         try {
             SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
-        } catch (SQLException e) {
-            Logs.error(TAG, "Exception occurred while deleting the customer");
-        } finally {
             fetchAppointments();
+        } catch (SQLException e) {
+            Logs.error(TAG, "Exception occurred while removing the appointment");
+        }
+    }
+
+    public void removeAppointmentsOfCustomer(int customerId) {
+        String statement = "DELETE FROM client_schedule.appointments WHERE Customer_ID = " + customerId;
+        try {
+            SqlDatabase.getConnection().createStatement().executeUpdate(statement);
+            fetchAppointments();
+        } catch (SQLException e) {
+            Logs.error(TAG, "Exception occurred while removing all appointments of a customer");
         }
     }
 
