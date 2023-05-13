@@ -16,10 +16,12 @@ public class AppointmentRepository {
     private enum FilterType {
         None,
         Weekly,
-        Monthly
+        Monthly,
+        ByContactId
     }
 
     private FilterType currentFilter = FilterType.None;
+    private int targetFilterContact = 1;
     private final String TAG = "AppointmentRepository";
     public final ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
     private static AppointmentRepository instance;
@@ -43,6 +45,7 @@ public class AppointmentRepository {
                     statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) = YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
             case Monthly ->
                     statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
+            case ByContactId -> statement += " WHERE Contact_ID = " + targetFilterContact;
         }
         try {
             ResultSet resultSet = SqlDatabase.executeForResult(statement);
@@ -129,10 +132,17 @@ public class AppointmentRepository {
         fetchAppointments();
     }
 
+    public void filterByContact(int contactId) {
+        currentFilter = FilterType.ByContactId;
+        targetFilterContact = contactId;
+        fetchAppointments();
+    }
+
     public void removeFilter() {
         currentFilter = FilterType.None;
         fetchAppointments();
     }
+
 
     private void populateCommonStatementsThenExecute(Appointment ap, PreparedStatement ps, String username) throws SQLException {
         ps.setString(1, ap.getTitle());
@@ -156,10 +166,10 @@ public class AppointmentRepository {
             Date appointmentStart = appointment.getStart();
             Date appointmentEnd = appointment.getEnd();
             if ((start.equals(appointmentStart)) || (end.equals(appointmentEnd)) ||
-                (start.after(appointmentStart) && start.before(appointmentEnd)) ||
-                (end.after(appointmentStart) && end.before(appointmentEnd)) ||
-                (appointmentStart.after(start) && appointmentStart.before(end)) ||
-                (appointmentEnd.after(start) && appointmentEnd.before(end))) {
+                    (start.after(appointmentStart) && start.before(appointmentEnd)) ||
+                    (end.after(appointmentStart) && end.before(appointmentEnd)) ||
+                    (appointmentStart.after(start) && appointmentStart.before(end)) ||
+                    (appointmentEnd.after(start) && appointmentEnd.before(end))) {
                 return false;
             }
         }

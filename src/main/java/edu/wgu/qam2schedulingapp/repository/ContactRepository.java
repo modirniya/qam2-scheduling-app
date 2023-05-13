@@ -37,4 +37,12 @@ public class ContactRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public Contact getContactById(int id) {
+        for (Contact contact : allContacts) {
+            if (contact.getId() == id)
+                return contact;
+        }
+        return null;
+    }
 }

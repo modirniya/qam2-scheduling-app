@@ -2,6 +2,7 @@ package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
+import edu.wgu.qam2schedulingapp.repository.ContactRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,7 @@ public class AppointmentController implements Initializable {
     public Label lbEvent;
     public TableColumn<Appointment, Date> tcStart;
     public TableColumn<Appointment, Date> tcEnd;
+    public TableColumn<Appointment, Integer> tcContact;
     private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
     public ToggleGroup appFilter;
 
@@ -35,8 +37,9 @@ public class AppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
         tbAppointments.setItems(AppointmentRepository.getInstance().allAppointments);
-        tcStart.setCellFactory(getColumnTableCellCallback());
-        tcEnd.setCellFactory(getColumnTableCellCallback());
+        tcStart.setCellFactory(getDateColumnTableCellCallback());
+        tcEnd.setCellFactory(getDateColumnTableCellCallback());
+        tcContact.setCellFactory(getContactColumnTableCellCallback());
     }
 
     public void navigateToHome(ActionEvent actionEvent) {
@@ -92,16 +95,6 @@ public class AppointmentController implements Initializable {
     public void generateReport(ActionEvent actionEvent) {
     }
 
-    private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> getColumnTableCellCallback() {
-        return col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Date date, boolean isDateEmpty) {
-                super.updateItem(date, isDateEmpty);
-                setText(isDateEmpty ? null : tableDateFormat.format(date));
-            }
-        };
-    }
-
     public void showCurrentWeek(ActionEvent actionEvent) {
         AppointmentRepository.getInstance().filterWeekly();
     }
@@ -112,5 +105,26 @@ public class AppointmentController implements Initializable {
 
     public void showAllAppointments(ActionEvent actionEvent) {
         AppointmentRepository.getInstance().removeFilter();
+    }
+
+    private Callback<TableColumn<Appointment, Integer>, TableCell<Appointment, Integer>> getContactColumnTableCellCallback() {
+        return col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Integer id, boolean isContactEmpty) {
+                super.updateItem(id, isContactEmpty);
+                setText(isContactEmpty ? null :
+                        ContactRepository.getInstance().getContactById(id).getName());
+            }
+        };
+    }
+
+    private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> getDateColumnTableCellCallback() {
+        return col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Date date, boolean isDateEmpty) {
+                super.updateItem(date, isDateEmpty);
+                setText(isDateEmpty ? null : tableDateFormat.format(date));
+            }
+        };
     }
 }

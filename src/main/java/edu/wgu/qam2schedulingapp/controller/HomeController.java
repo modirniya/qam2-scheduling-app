@@ -26,6 +26,7 @@ public class HomeController implements Initializable {
         FXMLLoader loaderAppointment = new FXMLLoader(getClass().getResource(RES_PATH + "appointment.fxml"));
         FXMLLoader loaderReport = new FXMLLoader(getClass().getResource(RES_PATH + "report.fxml"));
         try {
+            var controller = loaderReport.getController();
             stageCustomer.initModality(Modality.APPLICATION_MODAL);
             stageAppointment.initModality(Modality.APPLICATION_MODAL);
             stageReport.initModality(Modality.APPLICATION_MODAL);
@@ -42,6 +43,7 @@ public class HomeController implements Initializable {
     }
 
     public void showAppointmentScreen() {
+
         stageAppointment.showAndWait();
     }
 
