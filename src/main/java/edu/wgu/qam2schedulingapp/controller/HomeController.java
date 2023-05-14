@@ -15,39 +15,33 @@ import java.util.ResourceBundle;
 public class HomeController implements Initializable {
     private static final String RES_PATH = "/edu/wgu/qam2schedulingapp/view/";
     private static final String TAG = "HomeController";
-    private final Stage stageCustomer = new Stage();
-    private final Stage stageAppointment = new Stage();
-    private final Stage stageReport = new Stage();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
-        FXMLLoader loaderCustomer = new FXMLLoader(getClass().getResource(RES_PATH + "customer.fxml"));
-        FXMLLoader loaderAppointment = new FXMLLoader(getClass().getResource(RES_PATH + "appointment.fxml"));
-        FXMLLoader loaderReport = new FXMLLoader(getClass().getResource(RES_PATH + "report.fxml"));
-        try {
-            var controller = loaderReport.getController();
-            stageCustomer.initModality(Modality.APPLICATION_MODAL);
-            stageAppointment.initModality(Modality.APPLICATION_MODAL);
-            stageReport.initModality(Modality.APPLICATION_MODAL);
-            stageCustomer.setScene(new Scene(loaderCustomer.load()));
-            stageAppointment.setScene(new Scene(loaderAppointment.load()));
-            stageReport.setScene(new Scene(loaderReport.load()));
-        } catch (IOException e) {
-            Logs.error(TAG, "Initialization failed");
-        }
     }
 
-    public void showCustomersScreen() {
+    public void showCustomersScreen() throws IOException {
+        Stage stageCustomer = new Stage();
+        FXMLLoader loaderCustomer = new FXMLLoader(getClass().getResource(RES_PATH + "customer.fxml"));
+        stageCustomer.initModality(Modality.APPLICATION_MODAL);
+        stageCustomer.setScene(new Scene(loaderCustomer.load()));
         stageCustomer.showAndWait();
     }
 
-    public void showAppointmentScreen() {
-
+    public void showAppointmentScreen() throws IOException {
+        Stage stageAppointment = new Stage();
+        FXMLLoader loaderAppointment = new FXMLLoader(getClass().getResource(RES_PATH + "appointment.fxml"));
+        stageAppointment.initModality(Modality.APPLICATION_MODAL);
+        stageAppointment.setScene(new Scene(loaderAppointment.load()));
         stageAppointment.showAndWait();
     }
 
-    public void showReportScreen() {
+    public void showReportScreen() throws IOException {
+        Stage stageReport = new Stage();
+        FXMLLoader loaderReport = new FXMLLoader(getClass().getResource(RES_PATH + "report.fxml"));
+        stageReport.initModality(Modality.APPLICATION_MODAL);
+        stageReport.setScene(new Scene(loaderReport.load()));
         stageReport.showAndWait();
     }
 

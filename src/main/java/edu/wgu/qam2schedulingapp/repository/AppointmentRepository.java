@@ -1,11 +1,13 @@
 package edu.wgu.qam2schedulingapp.repository;
 
 import edu.wgu.qam2schedulingapp.model.Appointment;
+import edu.wgu.qam2schedulingapp.model.Month;
 import edu.wgu.qam2schedulingapp.utility.Logs;
 import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
 import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,17 +15,20 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class AppointmentRepository {
+
+    public static final String BASE_SELECT = "SELECT * FROM client_schedule.appointments";
+
     private enum FilterType {
         None,
         Weekly,
         Monthly,
-        ByContactId
     }
 
     private FilterType currentFilter = FilterType.None;
-    private int targetFilterContact = 1;
     private final String TAG = "AppointmentRepository";
-    public final ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    public final ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
+    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    public ObservableList<String> allTypes = FXCollections.observableArrayList();
     private static AppointmentRepository instance;
 
     public static AppointmentRepository getInstance() {
@@ -34,26 +39,51 @@ public class AppointmentRepository {
 
     private AppointmentRepository() {
         Logs.initLog(TAG);
-        fetchAppointments();
+        fetchAppointments(FilterType.None);
     }
 
-    private void fetchAppointments() {
-        allAppointments.clear();
-        String statement = "SELECT * FROM client_schedule.appointments";
-        switch (currentFilter) {
+    private void fetchAppointments(FilterType filterType) {
+        currentFilter = filterType;
+        String statement = BASE_SELECT;
+        switch (filterType) {
             case Weekly ->
                     statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) = YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
             case Monthly ->
                     statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
-            case ByContactId -> statement += " WHERE Contact_ID = " + targetFilterContact;
         }
+        executeFetch(statement);
+        if (filterType == FilterType.None)
+            allAppointments = filteredAppointments;
+        else
+            Logs.info(TAG, "Ignored changing all appointments");
+    }
+
+    public void fetchAppointmentsByContact(int contactId) {
+        executeFetch(BASE_SELECT + " WHERE Contact_ID = " + contactId);
+    }
+
+    public void fetchAppointmentsByTypeMonth(String type, Month month) {
+        executeFetch(BASE_SELECT + " WHERE Type = '" + type +
+                     "' AND MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = " + month.getNumber());
+    }
+
+    public void fetchAppointmentsByUserYear(String userId, String year) {
+        executeFetch(BASE_SELECT + " WHERE User_ID = " + userId +
+                     " AND YEAR(CONVERT_TZ(Start, '+00:00', '-05:00')) = " + year);
+    }
+
+    private void executeFetch(String statement) {
+        filteredAppointments.clear();
+        ObservableSet<String> allTypesSet = FXCollections.observableSet();
         try {
             ResultSet resultSet = SqlDatabase.executeForResult(statement);
             while (resultSet.next()) {
-                allAppointments.add(Appointment.fromResultSet(resultSet));
+                filteredAppointments.add(Appointment.fromResultSet(resultSet));
+                allTypesSet.add(resultSet.getString("Type"));
             }
+            allTypes = FXCollections.observableArrayList(allTypesSet);
         } catch (SQLException e) {
-            Logs.error(TAG, "Fetching all appointments has failed");
+            Logs.error(TAG, "Fetching appointments has failed");
             throw new RuntimeException(e);
         }
     }
@@ -106,7 +136,7 @@ public class AppointmentRepository {
         String strStatement = "DELETE FROM client_schedule.appointments WHERE Appointment_ID =" + appointment.getId();
         try {
             SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
-            fetchAppointments();
+            fetchAppointments(currentFilter);
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while removing the appointment");
         }
@@ -116,31 +146,22 @@ public class AppointmentRepository {
         String statement = "DELETE FROM client_schedule.appointments WHERE Customer_ID = " + customerId;
         try {
             SqlDatabase.getConnection().createStatement().executeUpdate(statement);
-            fetchAppointments();
+            fetchAppointments(currentFilter);
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while removing all appointments of a customer");
         }
     }
 
     public void filterWeekly() {
-        currentFilter = FilterType.Weekly;
-        fetchAppointments();
+        fetchAppointments(FilterType.Weekly);
     }
 
     public void filterMonthly() {
-        currentFilter = FilterType.Monthly;
-        fetchAppointments();
-    }
-
-    public void filterByContact(int contactId) {
-        currentFilter = FilterType.ByContactId;
-        targetFilterContact = contactId;
-        fetchAppointments();
+        fetchAppointments(FilterType.Monthly);
     }
 
     public void removeFilter() {
-        currentFilter = FilterType.None;
-        fetchAppointments();
+        fetchAppointments(FilterType.None);
     }
 
 
@@ -157,19 +178,20 @@ public class AppointmentRepository {
         ps.setString(10, username);
         ps.executeUpdate();
         ps.close();
-        fetchAppointments();
+        fetchAppointments(FilterType.None);
+        fetchAppointments(currentFilter);
     }
 
     public boolean checkTimeSlotAvailability(Date start, Date end, int id) {
         for (Appointment appointment : allAppointments) {
-            if (appointment.getId() == id) break;
+            if (appointment.getId() == id) continue;
             Date appointmentStart = appointment.getStart();
             Date appointmentEnd = appointment.getEnd();
             if ((start.equals(appointmentStart)) || (end.equals(appointmentEnd)) ||
-                    (start.after(appointmentStart) && start.before(appointmentEnd)) ||
-                    (end.after(appointmentStart) && end.before(appointmentEnd)) ||
-                    (appointmentStart.after(start) && appointmentStart.before(end)) ||
-                    (appointmentEnd.after(start) && appointmentEnd.before(end))) {
+                (start.after(appointmentStart) && start.before(appointmentEnd)) ||
+                (end.after(appointmentStart) && end.before(appointmentEnd)) ||
+                (appointmentStart.after(start) && appointmentStart.before(end)) ||
+                (appointmentEnd.after(start) && appointmentEnd.before(end))) {
                 return false;
             }
         }

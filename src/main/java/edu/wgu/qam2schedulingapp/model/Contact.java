@@ -48,7 +48,6 @@ public class Contact {
 
     @Override
     public String toString() {
-        return this.name;
-        // return String.valueOf(this.id);
+        return id + " - " + name;
     }
 }

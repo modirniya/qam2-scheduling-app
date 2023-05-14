@@ -99,5 +99,12 @@ public class CustomerRepository {
             Logs.error(TAG, "Exception occurred while deleting the customer");
         }
     }
+
+    public Customer getCustomerById(int customerId) {
+        for (Customer customer : allCustomers)
+            if (customer.getId() == customerId)
+                return customer;
+        return null;
+    }
 }
 

@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.Date;
@@ -39,7 +40,10 @@ public class AppointmentEditorController implements Initializable {
         cbStartTime.setItems(TimeHelper.getBusinessHours(0));
         cbEndTime.setItems(TimeHelper.getBusinessHours(+1));
         cbCustomerId.setItems(CustomerRepository.getInstance().allCustomers);
+        cbCustomerId.setCellFactory(customerCellFactory());
         cbUserId.setItems(UserRepository.getInstance().allUsers);
+        cbUserId.setCellFactory(usernameCellFactory());
+        cbUserId.setValue(UserRepository.getInstance().getCurrentUser());
         cbContact.setItems(ContactRepository.getInstance().allContacts);
     }
 
@@ -54,9 +58,13 @@ public class AppointmentEditorController implements Initializable {
             tfType.setText(appointment.getType());
             tfLocation.setText(appointment.getLocation());
             tfDescription.setText(appointment.getDescription());
-            cbCustomerId.setValue(Customer.withOnlyId(appointment.getCustomerId()));
-            cbUserId.setValue(User.withOnlyId(appointment.getUserId()));
-            cbContact.setValue(Contact.withOnlyId(appointment.getContactId()));
+            cbCustomerId.setValue(
+                    CustomerRepository.getInstance().getCustomerById(
+                            appointment.getCustomerId()));
+            cbUserId.setValue(
+                    UserRepository.getInstance().getUserById(appointment.getUserId()));
+            cbContact.setValue(
+                    ContactRepository.getInstance().getContactById(appointment.getContactId()));
             dpStart.setValue(TimeHelper.dateToLocalDate(appointment.getStart()));
             cbStartTime.setDisable(false);
             cbStartTime.setValue(
@@ -68,16 +76,18 @@ public class AppointmentEditorController implements Initializable {
         }
     }
 
-    public void startDateChosen(ActionEvent actionEvent) {
-        var datePicker = (DatePicker) actionEvent.getTarget();
-        cbStartTime.setDisable(datePicker.getValue() == null);
-        Logs.info(TAG, "Start Date chosen: " + datePicker.getValue());
+    public void startDateChosen() {
+        var startDate = dpStart.getValue();
+        var endDate = dpEnd.getValue();
+        if (endDate == null || endDate.isBefore(startDate))
+            dpEnd.setValue(dpStart.getValue());
+        cbStartTime.setDisable(startDate == null);
+        Logs.info(TAG, "Start Date chosen: " + startDate);
     }
 
     public void endDateChosen(ActionEvent actionEvent) {
-        var datePicker = (DatePicker) actionEvent.getTarget();
-        cbEndTime.setDisable(datePicker.getValue() == null);
-        Logs.info(TAG, "End Date chosen: " + datePicker.getValue());
+        cbEndTime.setDisable(dpEnd.getValue() == null);
+        Logs.info(TAG, "End Date chosen: " + dpEnd.getValue());
     }
 
     public void applyChanges() {
@@ -160,9 +170,29 @@ public class AppointmentEditorController implements Initializable {
             potentialErrors.append(decorate("Time slot is not available since it is overlapping another appointment"));
     }
 
+    private Callback<ListView<Customer>, ListCell<Customer>> customerCellFactory() {
+        return col -> new ListCell<>() {
+            @Override
+            protected void updateItem(Customer customer, boolean b) {
+                super.updateItem(customer, b);
+                if (customer != null)
+                    setText(customer.getId() + " - " + customer.getName());
+            }
+        };
+    }
+
+    private Callback<ListView<User>, ListCell<User>> usernameCellFactory() {
+        return col -> new ListCell<>() {
+            @Override
+            protected void updateItem(User user, boolean b) {
+                super.updateItem(user, b);
+                if (user != null)
+                    setText(user.getId() + " - " + user.getUsername());
+            }
+        };
+    }
+
     private String decorate(String entry) {
         return "\t‣ " + entry + "\n";
     }
-
-
 }

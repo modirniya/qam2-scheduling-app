@@ -22,9 +22,7 @@ import java.util.ResourceBundle;
 
 public class AppointmentController implements Initializable {
     private static final String TAG = "AppointmentController";
-
     private static final String APPOINTMENT_EDITOR_FXML = "/edu/wgu/qam2schedulingapp/view/appointment-editor.fxml";
-
     public TableView<Appointment> tbAppointments;
     public Label lbEvent;
     public TableColumn<Appointment, Date> tcStart;
@@ -36,10 +34,13 @@ public class AppointmentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
-        tbAppointments.setItems(AppointmentRepository.getInstance().allAppointments);
+        AppointmentRepository appRepo = AppointmentRepository.getInstance();
+        appRepo.removeFilter();
+        tbAppointments.setItems(appRepo.filteredAppointments);
         tcStart.setCellFactory(getDateColumnTableCellCallback());
         tcEnd.setCellFactory(getDateColumnTableCellCallback());
         tcContact.setCellFactory(getContactColumnTableCellCallback());
+
     }
 
     public void navigateToHome(ActionEvent actionEvent) {

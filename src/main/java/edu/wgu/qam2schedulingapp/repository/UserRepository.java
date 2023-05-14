@@ -49,4 +49,10 @@ public class UserRepository {
     public User getCurrentUser() {
         return currentUser;
     }
+
+    public User getUserById(int userId) {
+        for (User user : allUsers)
+            if (user.getId() == userId) return user;
+        return null;
+    }
 }

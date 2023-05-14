@@ -124,6 +124,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return id + " - " + name;
     }
 }
