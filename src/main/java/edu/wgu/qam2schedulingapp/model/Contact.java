@@ -16,12 +16,6 @@ public class Contact {
         return c;
     }
 
-    public static Contact withOnlyId(int contactId) {
-        Contact c = new Contact();
-        c.setId(contactId);
-        return c;
-    }
-
     public int getId() {
         return id;
     }

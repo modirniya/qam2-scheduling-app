@@ -12,7 +12,6 @@ import java.sql.SQLException;
 public class ContactRepository {
     private static final String TAG = "ContactRepository";
     public final ObservableList<Contact> allContacts = FXCollections.observableArrayList();
-
     private static ContactRepository instance;
 
     public static ContactRepository getInstance() {

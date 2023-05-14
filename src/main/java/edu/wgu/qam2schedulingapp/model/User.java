@@ -16,12 +16,6 @@ public class User {
         return u;
     }
 
-    public static User withOnlyId(int userId) {
-        User u = new User();
-        u.setId(userId);
-        return u;
-    }
-
     public String getUsername() {
         return username;
     }

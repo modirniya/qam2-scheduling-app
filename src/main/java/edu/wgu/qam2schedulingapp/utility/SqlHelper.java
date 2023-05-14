@@ -13,7 +13,6 @@ public class SqlHelper {
     private static final String username = "root";
     private static final String password = "12345";
     private static Connection connection = null;
-
     private static final String TAG = "SqlDatabase";
 
     public static void connect() {

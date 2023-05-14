@@ -35,13 +35,6 @@ public class Customer {
         return c;
     }
 
-    public static Customer withOnlyId(int appointmentId) {
-        Customer c = new Customer();
-        c.setId(appointmentId);
-        return c;
-    }
-
-
     public int getId() {
         return id;
     }

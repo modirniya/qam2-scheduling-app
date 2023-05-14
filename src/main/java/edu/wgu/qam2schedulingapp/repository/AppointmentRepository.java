@@ -15,9 +15,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class AppointmentRepository {
-
     public static final String BASE_SELECT = "SELECT * FROM client_schedule.appointments";
-
 
     private enum FilterType {
         None,

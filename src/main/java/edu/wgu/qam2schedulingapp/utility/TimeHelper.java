@@ -61,7 +61,6 @@ public class TimeHelper {
         return ldtStart.toLocalDate();
     }
 
-
     public static String dateToStringLocalTime(Date start) {
         LocalDateTime ldtStart =
                 start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();

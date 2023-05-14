@@ -83,9 +83,15 @@ public class AppointmentController implements Initializable {
             alert.setHeaderText("Are you sure?");
             alert.setContentText("This appointment information will be gone irreversibly.");
             alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresentOrElse(
-                    bt -> repo.removeAppointment(appointment), () -> lbEvent.setText("Deletion aborted: No changes has been made to the database.")
-            );
-            repo.removeAppointment(appointment);
+                    bt -> {
+                        repo.removeAppointment(appointment);
+                        var innerAlert = new Alert(Alert.AlertType.INFORMATION);
+                        innerAlert.setTitle("Deletion successful");
+                        innerAlert.setHeaderText("Appointment was successfully removed from the database");
+                        innerAlert.setContentText("Appointment ID: " + appointment.getId()
+                                                  + "\nType: " + appointment.getType());
+                        innerAlert.showAndWait();
+                    }, () -> lbEvent.setText("Deletion aborted: No changes has been made to the database."));
         } else
             lbEvent.setText("Unknown target: Select the appointment in the table and press modify again.");
     }
