@@ -3,7 +3,7 @@ package edu.wgu.qam2schedulingapp.utility;
 
 import java.sql.*;
 
-public class SqlDatabase {
+public class SqlHelper {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
     private static final String location = "//127.0.0.1/";

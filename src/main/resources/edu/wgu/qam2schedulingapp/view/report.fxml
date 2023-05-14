@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.wgu.qam2schedulingapp.controller.ReportController">
     <Label alignment="CENTER" layoutX="98.0" layoutY="54.0" text="Reports" AnchorPane.leftAnchor="0.0"
@@ -98,7 +89,7 @@
         <padding>
             <Insets bottom="4.0" left="8.0" right="8.0" top="4.0"/>
         </padding>
-        <Label text="Report by User and Year">
+        <Label fx:id="lbSubtitle" text="Report by User and Year">
             <font>
                 <Font size="15.0"/>
             </font>

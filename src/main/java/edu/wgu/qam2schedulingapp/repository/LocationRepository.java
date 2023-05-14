@@ -3,7 +3,7 @@ package edu.wgu.qam2schedulingapp.repository;
 import edu.wgu.qam2schedulingapp.model.Country;
 import edu.wgu.qam2schedulingapp.model.SPR;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
+import edu.wgu.qam2schedulingapp.utility.SqlHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -51,12 +51,13 @@ public class LocationRepository {
         ObservableList<Country> olResult = FXCollections.observableArrayList();
         try {
             String strStatement = "SELECT Country_ID, Country FROM client_schedule.countries";
-            var rsResult = SqlDatabase.executeForResult(strStatement);
+            var rsResult = SqlHelper.executeForResult(strStatement);
             while (rsResult.next()) {
                 olResult.add(new Country(
                         rsResult.getInt("Country_ID"),
                         rsResult.getString("Country")));
             }
+            rsResult.close();
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while executing getAllCountries()");
         }
@@ -83,13 +84,14 @@ public class LocationRepository {
 
         ObservableList<SPR> olResult = FXCollections.observableArrayList();
         try {
-            var rsResult = SqlDatabase.executeForResult(strStatement);
+            var rsResult = SqlHelper.executeForResult(strStatement);
             while (rsResult.next()) {
                 olResult.add(new SPR(
                         rsResult.getInt("Division_ID"),
                         rsResult.getInt("Country_ID"),
                         rsResult.getString("Division")));
             }
+            rsResult.close();
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while executing getAllSPR()");
         }

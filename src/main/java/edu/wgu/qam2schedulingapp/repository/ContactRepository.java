@@ -2,7 +2,7 @@ package edu.wgu.qam2schedulingapp.repository;
 
 import edu.wgu.qam2schedulingapp.model.Contact;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
+import edu.wgu.qam2schedulingapp.utility.SqlHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -28,7 +28,7 @@ public class ContactRepository {
     private void fetchAllContacts() {
         String statement = "SELECT * FROM client_schedule.contacts";
         try {
-            ResultSet resultSet = SqlDatabase.executeForResult(statement);
+            ResultSet resultSet = SqlHelper.executeForResult(statement);
             while (resultSet.next()) {
                 allContacts.add(Contact.fromResultSet(resultSet));
             }

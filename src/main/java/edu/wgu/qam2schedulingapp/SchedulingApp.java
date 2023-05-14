@@ -1,7 +1,7 @@
 package edu.wgu.qam2schedulingapp;
 
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
+import edu.wgu.qam2schedulingapp.utility.SqlHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -23,9 +23,9 @@ public class SchedulingApp extends Application {
 
     public static void main(String[] args) {
         Logs.info(TAG,"Starting the app");
-        SqlDatabase.connect();
+        SqlHelper.connect();
         launch();
-        SqlDatabase.disconnect();
+        SqlHelper.disconnect();
         Logs.info(TAG,"App is terminated successfully");
     }
 }

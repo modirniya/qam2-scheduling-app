@@ -3,7 +3,7 @@ package edu.wgu.qam2schedulingapp.repository;
 import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.model.Month;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
+import edu.wgu.qam2schedulingapp.utility.SqlHelper;
 import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,16 +18,18 @@ public class AppointmentRepository {
 
     public static final String BASE_SELECT = "SELECT * FROM client_schedule.appointments";
 
+
     private enum FilterType {
         None,
         Weekly,
-        Monthly,
+        Monthly
     }
 
     private FilterType currentFilter = FilterType.None;
+
     private final String TAG = "AppointmentRepository";
     public final ObservableList<Appointment> filteredAppointments = FXCollections.observableArrayList();
-    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    private final ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
     public ObservableList<String> allTypes = FXCollections.observableArrayList();
     private static AppointmentRepository instance;
 
@@ -45,17 +47,22 @@ public class AppointmentRepository {
     private void fetchAppointments(FilterType filterType) {
         currentFilter = filterType;
         String statement = BASE_SELECT;
-        switch (filterType) {
-            case Weekly ->
-                    statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) = YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
-            case Monthly ->
-                    statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) = MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
+        switch (currentFilter) {
+            case Weekly -> statement += " WHERE YEARWEEK(CONVERT_TZ(Start, '+00:00', '-05:00'), 1) =" +
+                                        " YEARWEEK(CONVERT_TZ(NOW(), '+00:00', '-05:00'), 1)";
+            case Monthly -> statement += " WHERE MONTH(CONVERT_TZ(Start, '+00:00', '-05:00')) =" +
+                                         " MONTH(CONVERT_TZ(NOW(), '+00:00', '-05:00'))";
         }
         executeFetch(statement);
-        if (filterType == FilterType.None)
-            allAppointments = filteredAppointments;
-        else
-            Logs.info(TAG, "Ignored changing all appointments");
+        if (currentFilter == FilterType.None) {
+            allAppointments.clear();
+            allAppointments.addAll(filteredAppointments);
+        }
+    }
+
+    public void fetchUpcomingAppointment() {
+        executeFetch(BASE_SELECT + " WHERE Start BETWEEN UTC_TIMESTAMP() " +
+                     "AND DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTE)");
     }
 
     public void fetchAppointmentsByContact(int contactId) {
@@ -74,14 +81,11 @@ public class AppointmentRepository {
 
     private void executeFetch(String statement) {
         filteredAppointments.clear();
-        ObservableSet<String> allTypesSet = FXCollections.observableSet();
         try {
-            ResultSet resultSet = SqlDatabase.executeForResult(statement);
+            ResultSet resultSet = SqlHelper.executeForResult(statement);
             while (resultSet.next()) {
                 filteredAppointments.add(Appointment.fromResultSet(resultSet));
-                allTypesSet.add(resultSet.getString("Type"));
             }
-            allTypes = FXCollections.observableArrayList(allTypesSet);
         } catch (SQLException e) {
             Logs.error(TAG, "Fetching appointments has failed");
             throw new RuntimeException(e);
@@ -101,7 +105,7 @@ public class AppointmentRepository {
                 )
                 VALUES(?,?,?,?,?,?,?,?,?,UTC_TIMESTAMP(),?,UTC_TIMESTAMP(),?)""";
         try {
-            ps = SqlDatabase.getConnection().prepareStatement(strStatement);
+            ps = SqlHelper.getConnection().prepareStatement(strStatement);
             ps.setString(11, username);
             populateCommonStatementsThenExecute(ap, ps, username);
         } catch (SQLException e) {
@@ -122,7 +126,7 @@ public class AppointmentRepository {
                     Customer_ID = ?,User_ID = ?,Contact_ID = ?,
                     Last_Update = UTC_TIMESTAMP(),Last_Updated_By = ?
                     WHERE Appointment_ID = ?""";
-            ps = SqlDatabase.getConnection().prepareStatement(strStatement);
+            ps = SqlHelper.getConnection().prepareStatement(strStatement);
             ps.setInt(11, ap.getId());
             populateCommonStatementsThenExecute(ap, ps, UserRepository.getInstance().getCurrentUser().getUsername());
         } catch (SQLException e) {
@@ -135,7 +139,7 @@ public class AppointmentRepository {
     public void removeAppointment(Appointment appointment) {
         String strStatement = "DELETE FROM client_schedule.appointments WHERE Appointment_ID =" + appointment.getId();
         try {
-            SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
+            SqlHelper.getConnection().createStatement().executeUpdate(strStatement);
             fetchAppointments(currentFilter);
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while removing the appointment");
@@ -145,7 +149,7 @@ public class AppointmentRepository {
     public void removeAppointmentsOfCustomer(int customerId) {
         String statement = "DELETE FROM client_schedule.appointments WHERE Customer_ID = " + customerId;
         try {
-            SqlDatabase.getConnection().createStatement().executeUpdate(statement);
+            SqlHelper.getConnection().createStatement().executeUpdate(statement);
             fetchAppointments(currentFilter);
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while removing all appointments of a customer");
@@ -164,7 +168,6 @@ public class AppointmentRepository {
         fetchAppointments(FilterType.None);
     }
 
-
     private void populateCommonStatementsThenExecute(Appointment ap, PreparedStatement ps, String username) throws SQLException {
         ps.setString(1, ap.getTitle());
         ps.setString(2, ap.getDescription());
@@ -178,7 +181,7 @@ public class AppointmentRepository {
         ps.setString(10, username);
         ps.executeUpdate();
         ps.close();
-        fetchAppointments(FilterType.None);
+        if (currentFilter != FilterType.None) allAppointments.add(ap);
         fetchAppointments(currentFilter);
     }
 
@@ -196,5 +199,12 @@ public class AppointmentRepository {
             }
         }
         return true;
+    }
+
+    public ObservableList<String> getAllTypes() {
+        ObservableSet<String> allTypesSet = FXCollections.observableSet();
+        for (Appointment appointment : allAppointments)
+            allTypesSet.add(appointment.getType());
+        return FXCollections.observableArrayList(allTypesSet);
     }
 }

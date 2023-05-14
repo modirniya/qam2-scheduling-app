@@ -16,7 +16,6 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
 public class CustomerController implements Initializable {
@@ -25,7 +24,6 @@ public class CustomerController implements Initializable {
     public TableView<Customer> tbCustomers;
     public Label lbEvent;
     public TableColumn<Customer, Integer> tcSPR;
-    private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

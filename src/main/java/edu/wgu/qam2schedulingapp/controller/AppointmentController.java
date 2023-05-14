@@ -4,7 +4,7 @@ import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.repository.ContactRepository;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import javafx.event.ActionEvent;
+import edu.wgu.qam2schedulingapp.utility.TimeHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -16,34 +16,31 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 public class AppointmentController implements Initializable {
     private static final String TAG = "AppointmentController";
     private static final String APPOINTMENT_EDITOR_FXML = "/edu/wgu/qam2schedulingapp/view/appointment-editor.fxml";
+    private final AppointmentRepository repo = AppointmentRepository.getInstance();
     public TableView<Appointment> tbAppointments;
     public Label lbEvent;
     public TableColumn<Appointment, Date> tcStart;
     public TableColumn<Appointment, Date> tcEnd;
     public TableColumn<Appointment, Integer> tcContact;
-    private final SimpleDateFormat tableDateFormat = new SimpleDateFormat("MM-dd-yy HH:mm");
     public ToggleGroup appFilter;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logs.initLog(TAG);
-        AppointmentRepository appRepo = AppointmentRepository.getInstance();
-        appRepo.removeFilter();
-        tbAppointments.setItems(appRepo.filteredAppointments);
-        tcStart.setCellFactory(getDateColumnTableCellCallback());
-        tcEnd.setCellFactory(getDateColumnTableCellCallback());
-        tcContact.setCellFactory(getContactColumnTableCellCallback());
-
+        repo.removeFilter();
+        tbAppointments.setItems(repo.filteredAppointments);
+        tcStart.setCellFactory(tableDateFormatCellFactory());
+        tcEnd.setCellFactory(tableDateFormatCellFactory());
+        tcContact.setCellFactory(tableContactCellFactory());
     }
 
-    public void navigateToHome(ActionEvent actionEvent) {
+    public void navigateToHome() {
         Stage stage = (Stage) tbAppointments.getScene().getWindow();
         stage.close();
     }
@@ -63,11 +60,11 @@ public class AppointmentController implements Initializable {
         }
     }
 
-    public void addAppointment(ActionEvent actionEvent) {
+    public void addAppointment() {
         navigateToEditor(null);
     }
 
-    public void modifyAppointment(ActionEvent actionEvent) {
+    public void modifyAppointment() {
         Appointment appointment = tbAppointments.getSelectionModel().getSelectedItem();
         if (appointment != null) {
             lbEvent.setText("");
@@ -77,7 +74,7 @@ public class AppointmentController implements Initializable {
 
     }
 
-    public void deleteAppointment(ActionEvent actionEvent) {
+    public void deleteAppointment() {
         lbEvent.setText("");
         Appointment appointment = tbAppointments.getSelectionModel().getSelectedItem();
         if (appointment != null) {
@@ -86,29 +83,26 @@ public class AppointmentController implements Initializable {
             alert.setHeaderText("Are you sure?");
             alert.setContentText("This appointment information will be gone irreversibly.");
             alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresentOrElse(
-                    bt -> AppointmentRepository.getInstance().removeAppointment(appointment), () -> lbEvent.setText("Deletion aborted: No changes has been made to the database.")
+                    bt -> repo.removeAppointment(appointment), () -> lbEvent.setText("Deletion aborted: No changes has been made to the database.")
             );
-            AppointmentRepository.getInstance().removeAppointment(appointment);
+            repo.removeAppointment(appointment);
         } else
             lbEvent.setText("Unknown target: Select the appointment in the table and press modify again.");
     }
 
-    public void generateReport(ActionEvent actionEvent) {
+    public void showCurrentWeek() {
+        repo.filterWeekly();
     }
 
-    public void showCurrentWeek(ActionEvent actionEvent) {
-        AppointmentRepository.getInstance().filterWeekly();
+    public void showCurrentMonth() {
+        repo.filterMonthly();
     }
 
-    public void showCurrentMonth(ActionEvent actionEvent) {
-        AppointmentRepository.getInstance().filterMonthly();
+    public void showAllAppointments() {
+        repo.removeFilter();
     }
 
-    public void showAllAppointments(ActionEvent actionEvent) {
-        AppointmentRepository.getInstance().removeFilter();
-    }
-
-    private Callback<TableColumn<Appointment, Integer>, TableCell<Appointment, Integer>> getContactColumnTableCellCallback() {
+    private Callback<TableColumn<Appointment, Integer>, TableCell<Appointment, Integer>> tableContactCellFactory() {
         return col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer id, boolean isContactEmpty) {
@@ -119,12 +113,12 @@ public class AppointmentController implements Initializable {
         };
     }
 
-    private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> getDateColumnTableCellCallback() {
+    private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> tableDateFormatCellFactory() {
         return col -> new TableCell<>() {
             @Override
             protected void updateItem(Date date, boolean isDateEmpty) {
                 super.updateItem(date, isDateEmpty);
-                setText(isDateEmpty ? null : tableDateFormat.format(date));
+                setText(isDateEmpty ? null : TimeHelper.TABLE_DATE_FORMAT.format(date));
             }
         };
     }

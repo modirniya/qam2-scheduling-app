@@ -2,7 +2,7 @@ package edu.wgu.qam2schedulingapp.repository;
 
 import edu.wgu.qam2schedulingapp.model.Customer;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
+import edu.wgu.qam2schedulingapp.utility.SqlHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -31,7 +31,7 @@ public class CustomerRepository {
         allCustomers.clear();
         try {
             String statement = "SELECT * FROM client_schedule.customers";
-            ResultSet result = SqlDatabase.executeForResult(statement);
+            ResultSet result = SqlHelper.executeForResult(statement);
             while (result.next()) {
                 allCustomers.add(Customer.fromResultSet(result));
             }
@@ -48,10 +48,11 @@ public class CustomerRepository {
                         SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?,
                         Last_Update = UTC_TIMESTAMP(), Last_Updated_By = ?, Division_ID = ?
                         WHERE Customer_ID = ?""";
-            PreparedStatement statement = SqlDatabase.getConnection().prepareStatement(strStatement);
+            PreparedStatement statement = SqlHelper.getConnection().prepareStatement(strStatement);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
+
             statement.setString(4, customer.getPhone());
             statement.setString(5, UserRepository.getInstance().getCurrentUser().getUsername());
             statement.setInt(6, customer.getDivisionId());
@@ -73,7 +74,7 @@ public class CustomerRepository {
                         (Customer_Name,Address,Postal_Code,Phone,Create_Date,
                         Created_By,Last_Update,Last_Updated_By,Division_ID)
                         VALUES (?,?,?,?,UTC_TIMESTAMP(),?,UTC_TIMESTAMP(),?,?)""";
-            statement = SqlDatabase.getConnection().prepareStatement(strStatement);
+            statement = SqlHelper.getConnection().prepareStatement(strStatement);
             statement.setString(1, customer.getName());
             statement.setString(2, customer.getAddress());
             statement.setString(3, customer.getPostalCode());
@@ -93,7 +94,7 @@ public class CustomerRepository {
         // TODO Make sure to delete appointment of this customer
         String strStatement = "DELETE FROM client_schedule.customers WHERE Customer_ID =" + customer.getId();
         try {
-            SqlDatabase.getConnection().createStatement().executeUpdate(strStatement);
+            SqlHelper.getConnection().createStatement().executeUpdate(strStatement);
             fetchAllCustomers();
         } catch (SQLException e) {
             Logs.error(TAG, "Exception occurred while deleting the customer");

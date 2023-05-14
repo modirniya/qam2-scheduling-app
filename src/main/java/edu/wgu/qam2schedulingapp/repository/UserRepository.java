@@ -2,7 +2,7 @@ package edu.wgu.qam2schedulingapp.repository;
 
 import edu.wgu.qam2schedulingapp.model.User;
 import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlDatabase;
+import edu.wgu.qam2schedulingapp.utility.SqlHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -28,7 +28,7 @@ public class UserRepository {
     private void fetchAllUsers() {
         String statement = "SELECT User_ID, User_Name, Password FROM client_schedule.users";
         try {
-            ResultSet resultSet = SqlDatabase.executeForResult(statement);
+            ResultSet resultSet = SqlHelper.executeForResult(statement);
             while (resultSet.next()) {
                 allUsers.add(User.fromResultSet(resultSet));
             }

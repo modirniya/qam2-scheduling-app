@@ -4,19 +4,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class TimeHelper {
+    public static final SimpleDateFormat TABLE_DATE_FORMAT = new SimpleDateFormat("MM-dd-yy HH:mm");
+
+    public static final String EDT_TO_UTC_OFFSET = "'+00:00', '-04:00'";
 
     public static Date utcToSystemLocalDate(Timestamp tsUTC) {
         LocalDateTime ldtUTC = tsUTC.toLocalDateTime();
         ZonedDateTime zdtLocal =
                 ldtUTC.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.systemDefault());
         return Date.from(zdtLocal.toInstant());
-
     }
 
     public static String getTimeZone() {
@@ -31,12 +34,6 @@ public class TimeHelper {
         ObservableList<String> timeSlots = FXCollections.observableArrayList();
         var openingHour = 8 + hoursOffset + getTimezoneDifferenceToEST();
         var closingHour = 21 + hoursOffset + getTimezoneDifferenceToEST();
-//        for (int hour = openingHour; hour <= closingHour; hour++) {
-//            for (int mins = 0; mins < 4; mins++) {
-//                if (hour == closingHour && mins != 0) break;
-//                timeSlots.add((hour > 9 ? hour : "0" + hour) + ":" + (mins != 0 ? (mins * 15) : "00"));
-//            }
-//        }
         int hour, minute;
         String time;
         for (double d = openingHour; d <= closingHour; d += 0.25) {
@@ -51,13 +48,10 @@ public class TimeHelper {
     public static double getTimezoneDifferenceToEST() {
         ZoneId systemZone = ZoneId.systemDefault();
         ZoneId estZone = ZoneId.of("America/New_York");
-
         LocalDateTime now = LocalDateTime.now();
         ZonedDateTime systemZonedDateTime = now.atZone(systemZone);
         ZonedDateTime estZonedDateTime = now.atZone(estZone);
-
         double hoursDifference = ChronoUnit.MINUTES.between(systemZonedDateTime, estZonedDateTime);
-
         return hoursDifference / 60.0;
     }
 
