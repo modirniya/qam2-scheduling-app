@@ -1,4 +1,4 @@
-package edu.wgu.qam2schedulingapp.utility;
+package edu.wgu.qam2schedulingapp.helper;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

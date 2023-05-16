@@ -1,8 +1,8 @@
 package edu.wgu.qam2schedulingapp.controller;
 
 import edu.wgu.qam2schedulingapp.repository.UserRepository;
-import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.TimeHelper;
+import edu.wgu.qam2schedulingapp.helper.Logs;
+import edu.wgu.qam2schedulingapp.helper.TimeHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;

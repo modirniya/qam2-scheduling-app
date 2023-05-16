@@ -7,7 +7,7 @@ module edu.wgu.qam2schedulingapp {
 
     exports edu.wgu.qam2schedulingapp;
     exports edu.wgu.qam2schedulingapp.controller;
-    exports edu.wgu.qam2schedulingapp.utility;
+    exports edu.wgu.qam2schedulingapp.helper;
     exports edu.wgu.qam2schedulingapp.repository;
     exports edu.wgu.qam2schedulingapp.model;
     opens edu.wgu.qam2schedulingapp.controller to javafx.fxml;

@@ -4,7 +4,7 @@ import edu.wgu.qam2schedulingapp.model.Customer;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.repository.CustomerRepository;
 import edu.wgu.qam2schedulingapp.repository.LocationRepository;
-import edu.wgu.qam2schedulingapp.utility.Logs;
+import edu.wgu.qam2schedulingapp.helper.Logs;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;

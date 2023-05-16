@@ -6,7 +6,7 @@ import edu.wgu.qam2schedulingapp.model.EditorMode;
 import edu.wgu.qam2schedulingapp.model.SPR;
 import edu.wgu.qam2schedulingapp.repository.CustomerRepository;
 import edu.wgu.qam2schedulingapp.repository.LocationRepository;
-import edu.wgu.qam2schedulingapp.utility.Logs;
+import edu.wgu.qam2schedulingapp.helper.Logs;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;

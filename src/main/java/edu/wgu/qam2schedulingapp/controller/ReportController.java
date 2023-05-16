@@ -7,7 +7,7 @@ import edu.wgu.qam2schedulingapp.model.User;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.repository.ContactRepository;
 import edu.wgu.qam2schedulingapp.repository.UserRepository;
-import edu.wgu.qam2schedulingapp.utility.TimeHelper;
+import edu.wgu.qam2schedulingapp.helper.TimeHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;

@@ -2,9 +2,9 @@ package edu.wgu.qam2schedulingapp.repository;
 
 import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.model.Month;
-import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlHelper;
-import edu.wgu.qam2schedulingapp.utility.TimeHelper;
+import edu.wgu.qam2schedulingapp.helper.Logs;
+import edu.wgu.qam2schedulingapp.helper.SqlHelper;
+import edu.wgu.qam2schedulingapp.helper.TimeHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;

@@ -1,4 +1,4 @@
-package edu.wgu.qam2schedulingapp.utility;
+package edu.wgu.qam2schedulingapp.helper;
 
 import java.io.FileWriter;
 import java.io.IOException;

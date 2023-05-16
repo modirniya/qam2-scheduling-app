@@ -1,6 +1,6 @@
 package edu.wgu.qam2schedulingapp.model;
 
-import edu.wgu.qam2schedulingapp.utility.TimeHelper;
+import edu.wgu.qam2schedulingapp.helper.TimeHelper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

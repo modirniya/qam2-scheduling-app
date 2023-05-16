@@ -1,7 +1,7 @@
 package edu.wgu.qam2schedulingapp;
 
-import edu.wgu.qam2schedulingapp.utility.Logs;
-import edu.wgu.qam2schedulingapp.utility.SqlHelper;
+import edu.wgu.qam2schedulingapp.helper.Logs;
+import edu.wgu.qam2schedulingapp.helper.SqlHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
