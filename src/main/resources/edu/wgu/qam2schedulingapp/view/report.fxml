@@ -15,17 +15,17 @@
     </Label>
     <Separator layoutX="13.0" layoutY="72.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                AnchorPane.topAnchor="48.0"/>
-    <TabPane layoutX="12.0" layoutY="398.5" nodeOrientation="LEFT_TO_RIGHT" tabClosingPolicy="UNAVAILABLE"
-             AnchorPane.leftAnchor="124.0" AnchorPane.topAnchor="60.0">
-        <Tab closable="false" text="By Contact">
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+    <TabPane layoutX="12.0" layoutY="398.5" nodeOrientation="LEFT_TO_RIGHT" prefWidth="400.0"
+             tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="124.0" AnchorPane.topAnchor="60.0">
+        <Tab fx:id="tabContact" closable="false" onSelectionChanged="#onTabSelectionChange" text="By Contact">
+            <AnchorPane minHeight="0.0" minWidth="0.0">
                 <ComboBox fx:id="cbContact" layoutX="608.0" layoutY="4.0" onAction="#onTargetContactChange"
                           prefWidth="150.0" promptText="Contact" AnchorPane.leftAnchor="8.0"
                           AnchorPane.topAnchor="8.0"/>
             </AnchorPane>
         </Tab>
-        <Tab closable="false" text="By Type and Month">
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+        <Tab fx:id="tabTypeMonth" closable="false" onSelectionChanged="#onTabSelectionChange" text="By Type and Month">
+            <AnchorPane minHeight="0.0" minWidth="0.0">
                 <ComboBox fx:id="cbMonth" layoutX="605.0" layoutY="24.0" onAction="#onTargetMonthChange"
                           prefWidth="150.0" promptText="Month" AnchorPane.leftAnchor="164.0"
                           AnchorPane.topAnchor="8.0"/>
@@ -33,8 +33,8 @@
                           promptText="Type" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="8.0"/>
             </AnchorPane>
         </Tab>
-        <Tab closable="false" text="By User and Year">
-            <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="200.0">
+        <Tab fx:id="tabUserYear" closable="false" onSelectionChanged="#onTabSelectionChange" text="By User and Year">
+            <AnchorPane minHeight="0.0" minWidth="0.0">
                 <ComboBox fx:id="cbYear" layoutX="626.0" layoutY="10.0" onAction="#onTargetYearChange" prefWidth="150.0"
                           promptText="Year" AnchorPane.leftAnchor="164.0" AnchorPane.topAnchor="8.0"/>
                 <ComboBox fx:id="cbUser" layoutX="437.0" layoutY="11.0" onAction="#onTargetUserChange" prefWidth="150.0"

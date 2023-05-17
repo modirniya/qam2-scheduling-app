@@ -42,6 +42,11 @@ public class HomeController implements Initializable {
         repo.fetchUpcomingAppointment();
         if (repo.filteredAppointments.size() == 0) {
             Logs.info(TAG, "No upcoming appointment");
+            var alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No upcoming appointment");
+            alert.setHeaderText(null);
+            alert.setContentText("There is no appointment within 15 minutes");
+            alert.showAndWait();
         } else if (repo.filteredAppointments.size() == 1) {
             alertUpcomingAppointment(repo.filteredAppointments.get(0));
             Logs.info(TAG, "There is a upcoming appointment:\n" + repo.filteredAppointments.get(0).toString());

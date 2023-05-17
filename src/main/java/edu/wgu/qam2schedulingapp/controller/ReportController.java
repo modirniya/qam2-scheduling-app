@@ -10,13 +10,13 @@ import edu.wgu.qam2schedulingapp.repository.ContactRepository;
 import edu.wgu.qam2schedulingapp.repository.UserRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.time.Year;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -44,6 +44,10 @@ public class ReportController implements Initializable {
     private final AppointmentRepository repo = AppointmentRepository.getInstance();
     private static final String TAG = "ReportController";
     private final ObservableList<String> years = FXCollections.observableArrayList();
+    public Tab tabContact;
+    public Tab tabTypeMonth;
+    public Tab tabUserYear;
+    private boolean isInitComplete = false;
 
     /**
      * Initializes the ReportController.
@@ -55,25 +59,26 @@ public class ReportController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        cbContact.setItems(ContactRepository.getInstance().allContacts);
-        var firstContact = ContactRepository.getInstance().allContacts.get(0);
-        cbContact.setValue(firstContact);
-        cbUser.setItems(UserRepository.getInstance().allUsers);
-        cbUser.setCellFactory(usernameCellFactory());
-        cbType.setItems(repo.getAllTypes());
-        tcStart.setCellFactory(tableDateFormatFactory());
-        tcEnd.setCellFactory(tableDateFormatFactory());
-        repo.fetchAppointmentsByContact(firstContact.getId());
-        tbAppointments.setItems(repo.filteredAppointments);
-        ObservableList<Month> months = FXCollections.observableArrayList(
-                Arrays.stream(Month.values()).collect(Collectors.toList()));
-        cbMonth.setItems(months);
         for (int i = 2000; i <= 2050; i++) {
             years.add(String.valueOf(i));
         }
+        ObservableList<Month> months = FXCollections.observableArrayList(
+                Arrays.stream(Month.values()).collect(Collectors.toList()));
+        cbContact.setItems(ContactRepository.getInstance().allContacts);
+        cbUser.setItems(UserRepository.getInstance().allUsers);
+        cbType.setItems(repo.getAllTypes());
+        cbMonth.setItems(months);
         cbYear.setItems(years);
-        cbYear.setValue(String.valueOf(Year.now().getValue()));
-        updateSizeLabel();
+        tbAppointments.setItems(repo.filteredAppointments);
+        cbUser.setCellFactory(usernameCellFactory());
+        tcStart.setCellFactory(tableDateFormatFactory());
+        tcEnd.setCellFactory(tableDateFormatFactory());
+        var firstContact = ContactRepository.getInstance().allContacts.get(0);
+        isInitComplete = true;
+        cbContact.setValue(firstContact);
+        onTargetContactChange();
+//        cbYear.setValue(String.valueOf(Year.now().getValue()));
+//        updateSizeLabel();
     }
 
     /**
@@ -81,9 +86,9 @@ public class ReportController implements Initializable {
      * It fetches the appointments data by the selected contact and updates the table.
      */
     public void onTargetContactChange() {
-        lbSubtitle.setText("Report by contact");
         repo.fetchAppointmentsByContact(cbContact.getValue().getId());
         updateSizeLabel();
+        lbSubtitle.setText("Report by contact");
     }
 
     /**
@@ -129,9 +134,9 @@ public class ReportController implements Initializable {
      * and updates the size of the records found.
      */
     private void reportByTypeMonth() {
-        lbSubtitle.setText("Report by type and month");
         repo.fetchAppointmentsByTypeMonth(cbType.getValue(), cbMonth.getValue());
         updateSizeLabel();
+        lbSubtitle.setText("Report by type and month");
     }
 
     /**
@@ -140,10 +145,10 @@ public class ReportController implements Initializable {
      * and updates the size of the records found.
      */
     private void reportByUserYear() {
-        lbSubtitle.setText("Report by user and year");
         repo.fetchAppointmentsByUserYear(String.valueOf(cbUser.getValue().getId()),
                 cbYear.getValue());
         updateSizeLabel();
+        lbSubtitle.setText("Report by user and year");
     }
 
     /**
@@ -184,5 +189,14 @@ public class ReportController implements Initializable {
                     setText(user.getUsername());
             }
         };
+    }
+
+    public void onTabSelectionChange(Event event) {
+        if (isInitComplete) {
+            if (event.getSource() == tabContact) onTargetContactChange();
+            else if (event.getSource() == tabTypeMonth) onTargetMonthChange();
+            else if (event.getSource() == tabUserYear) onTargetYearChange();
+            updateSizeLabel();
+        }
     }
 }
