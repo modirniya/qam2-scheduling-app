@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class Customer {
     private int id;
     private int divisionId;
@@ -29,9 +33,9 @@ public class Customer {
         c.createdBy = rs.getString("Created_By");
         c.lastUpdatedBy = rs.getString("Last_Updated_By");
         c.createDate =
-                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
+                TimeHelper.utcToLocalDate(rs.getTimestamp("Create_Date"));
         c.lastUpdate =
-                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
+                TimeHelper.utcToLocalDate(rs.getTimestamp("Last_Update"));
         return c;
     }
 

@@ -9,6 +9,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class SchedulingApp extends Application {
     private static final String TAG = "SchedulingApp";
 
@@ -22,10 +26,10 @@ public class SchedulingApp extends Application {
     }
 
     public static void main(String[] args) {
-        Logs.info(TAG,"Starting the app");
+        Logs.info(TAG, "Starting the app");
         SqlHelper.connect();
         launch();
         SqlHelper.disconnect();
-        Logs.info(TAG,"App is terminated successfully");
+        Logs.info(TAG, "App is terminated successfully");
     }
 }

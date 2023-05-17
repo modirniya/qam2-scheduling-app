@@ -1,0 +1,6 @@
+module:edu.wgu.qam2schedulingapp
+edu.wgu.qam2schedulingapp
+edu.wgu.qam2schedulingapp.controller
+edu.wgu.qam2schedulingapp.helper
+edu.wgu.qam2schedulingapp.model
+edu.wgu.qam2schedulingapp.repository

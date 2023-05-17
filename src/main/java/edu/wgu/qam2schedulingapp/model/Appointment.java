@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class Appointment {
     private int id;
     private int customerId;
@@ -29,13 +33,13 @@ public class Appointment {
         ap.description = rs.getString("Description");
         ap.location = rs.getString("Location");
         ap.type = rs.getString("Type");
-        ap.start = TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Start"));
-        ap.end = TimeHelper.utcToSystemLocalDate(rs.getTimestamp("End"));
+        ap.start = TimeHelper.utcToLocalDate(rs.getTimestamp("Start"));
+        ap.end = TimeHelper.utcToLocalDate(rs.getTimestamp("End"));
         ap.createDate =
-                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Create_Date"));
+                TimeHelper.utcToLocalDate(rs.getTimestamp("Create_Date"));
         ap.createdBy = rs.getString("Created_By");
         ap.lastUpdate =
-                TimeHelper.utcToSystemLocalDate(rs.getTimestamp("Last_Update"));
+                TimeHelper.utcToLocalDate(rs.getTimestamp("Last_Update"));
         ap.lastUpdatedBy = rs.getString("Last_Updated_By");
         ap.customerId = rs.getInt("Customer_ID");
         ap.userId = rs.getInt("User_ID");

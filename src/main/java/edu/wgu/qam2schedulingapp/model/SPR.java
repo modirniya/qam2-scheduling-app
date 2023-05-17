@@ -1,5 +1,9 @@
 package edu.wgu.qam2schedulingapp.model;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class SPR {
     private final int divisionId;
     private final int countryId;

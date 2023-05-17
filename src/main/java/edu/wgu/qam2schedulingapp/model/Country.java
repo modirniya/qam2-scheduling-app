@@ -1,5 +1,9 @@
 package edu.wgu.qam2schedulingapp.model;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class Country {
     private final int id;
     private final String name;

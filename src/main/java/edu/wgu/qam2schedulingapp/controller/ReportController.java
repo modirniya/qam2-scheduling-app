@@ -1,5 +1,6 @@
 package edu.wgu.qam2schedulingapp.controller;
 
+import edu.wgu.qam2schedulingapp.helper.TimeHelper;
 import edu.wgu.qam2schedulingapp.model.Appointment;
 import edu.wgu.qam2schedulingapp.model.Contact;
 import edu.wgu.qam2schedulingapp.model.Month;
@@ -7,7 +8,6 @@ import edu.wgu.qam2schedulingapp.model.User;
 import edu.wgu.qam2schedulingapp.repository.AppointmentRepository;
 import edu.wgu.qam2schedulingapp.repository.ContactRepository;
 import edu.wgu.qam2schedulingapp.repository.UserRepository;
-import edu.wgu.qam2schedulingapp.helper.TimeHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
@@ -22,21 +22,37 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+/**
+ * This class is the controller for the Report view of the scheduling app.
+ * It handles the user interactions with the Report interface, manages the process of
+ * fetching appointments data and presenting the reports.
+ *
+ * @author Parham Modirniya
+ */
+
 public class ReportController implements Initializable {
-    private static final String TAG = "ReportController";
     public TableView<Appointment> tbAppointments;
     public TableColumn<Appointment, Date> tcStart;
     public TableColumn<Appointment, Date> tcEnd;
     public ComboBox<Contact> cbContact;
-    private final AppointmentRepository repo = AppointmentRepository.getInstance();
-    public Label lbCount;
     public ComboBox<User> cbUser;
     public ComboBox<String> cbYear;
     public ComboBox<String> cbType;
     public ComboBox<Month> cbMonth;
-    private final ObservableList<String> years = FXCollections.observableArrayList();
+    public Label lbCount;
     public Label lbSubtitle;
+    private final AppointmentRepository repo = AppointmentRepository.getInstance();
+    private static final String TAG = "ReportController";
+    private final ObservableList<String> years = FXCollections.observableArrayList();
 
+    /**
+     * Initializes the ReportController.
+     * This method is called after the FXMLLoader has completely loaded the FXML.
+     * It initializes the reports components and fetches the initial data.
+     *
+     * @param url            A location used to resolve relative paths for the root object, or null.
+     * @param resourceBundle The resources used to localize the root object, or null.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cbContact.setItems(ContactRepository.getInstance().allContacts);
@@ -60,6 +76,95 @@ public class ReportController implements Initializable {
         updateSizeLabel();
     }
 
+    /**
+     * Updates the report according to the selected contact.
+     * It fetches the appointments data by the selected contact and updates the table.
+     */
+    public void onTargetContactChange() {
+        lbSubtitle.setText("Report by contact");
+        repo.fetchAppointmentsByContact(cbContact.getValue().getId());
+        updateSizeLabel();
+    }
+
+    /**
+     * Updates the report according to the selected month.
+     * It fetches the appointments data by the selected type and month if the type is selected, and updates the table.
+     */
+    public void onTargetMonthChange() {
+        if (cbType.getValue() != null)
+            reportByTypeMonth();
+    }
+
+    /**
+     * Updates the report according to the selected type.
+     * It fetches the appointments data by the selected type and month if the month is selected, and updates the table.
+     */
+    public void onTargetTypeChange() {
+        if (cbMonth.getValue() != null)
+            reportByTypeMonth();
+
+    }
+
+    /**
+     * Updates the report according to the selected year.
+     * It fetches the appointments data by the selected user and year if the user is selected, and updates the table.
+     */
+    public void onTargetYearChange() {
+        if (cbUser.getValue() != null)
+            reportByUserYear();
+    }
+
+    /**
+     * Updates the report according to the selected user.
+     * It fetches the appointments data by the selected user and year if the year is selected, and updates the table.
+     */
+    public void onTargetUserChange() {
+        if (cbYear.getValue() != null)
+            reportByUserYear();
+    }
+
+    /**
+     * This method generates a report based on the selected type and month.
+     * It fetches the appointments data by the selected type and month, updates the table,
+     * and updates the size of the records found.
+     */
+    private void reportByTypeMonth() {
+        lbSubtitle.setText("Report by type and month");
+        repo.fetchAppointmentsByTypeMonth(cbType.getValue(), cbMonth.getValue());
+        updateSizeLabel();
+    }
+
+    /**
+     * This method generates a report based on the selected user and year.
+     * It fetches the appointments data by the selected user and year, updates the table,
+     * and updates the size of the records found.
+     */
+    private void reportByUserYear() {
+        lbSubtitle.setText("Report by user and year");
+        repo.fetchAppointmentsByUserYear(String.valueOf(cbUser.getValue().getId()),
+                cbYear.getValue());
+        updateSizeLabel();
+    }
+
+    /**
+     * This method updates the label that shows the number of records found in the current filter view.
+     * It gets the size of the filteredAppointments from the AppointmentRepository and
+     * sets it to the lbCount label in the format of "{size} Record(s) Found".
+     */
+    private void updateSizeLabel() {
+        lbCount.setText(repo.filteredAppointments.size() + " Record(s) Found");
+    }
+
+    /**
+     * This method is used to navigate back to the home screen of the application.
+     * It closes the current stage (window) which is assumed to be the 'Report' stage.
+     * The method should be triggered by an action event, typically a button click.
+     */
+    public void navigateToHome() {
+        Stage stage = (Stage) tbAppointments.getScene().getWindow();
+        stage.close();
+    }
+
     private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> tableDateFormatFactory() {
         return col -> new TableCell<>() {
             @Override
@@ -79,54 +184,5 @@ public class ReportController implements Initializable {
                     setText(user.getUsername());
             }
         };
-    }
-
-    public void onTargetContactChange() {
-        lbSubtitle.setText("Report by contact");
-        repo.fetchAppointmentsByContact(cbContact.getValue().getId());
-        updateSizeLabel();
-    }
-
-    public void onTargetMonthChange() {
-        if (cbType.getValue() != null)
-            reportByTypeMonth();
-    }
-
-    public void onTargetTypeChange() {
-        if (cbMonth.getValue() != null)
-            reportByTypeMonth();
-
-    }
-
-    public void onTargetYearChange() {
-        if (cbUser.getValue() != null)
-            reportByUserYear();
-    }
-
-    public void onTargetUserChange() {
-        if (cbYear.getValue() != null)
-            reportByUserYear();
-    }
-
-    private void reportByTypeMonth() {
-        lbSubtitle.setText("Report by type and month");
-        repo.fetchAppointmentsByTypeMonth(cbType.getValue(), cbMonth.getValue());
-        updateSizeLabel();
-    }
-
-    private void reportByUserYear() {
-        lbSubtitle.setText("Report by user and year");
-        repo.fetchAppointmentsByUserYear(String.valueOf(cbUser.getValue().getId()),
-                cbYear.getValue());
-        updateSizeLabel();
-    }
-
-    private void updateSizeLabel() {
-        lbCount.setText(repo.filteredAppointments.size() + " Record(s) Found");
-    }
-
-    public void navigateToHome() {
-        Stage stage = (Stage) tbAppointments.getScene().getWindow();
-        stage.close();
     }
 }

@@ -3,6 +3,10 @@ package edu.wgu.qam2schedulingapp.model;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class User {
     private int id;
     private String username;

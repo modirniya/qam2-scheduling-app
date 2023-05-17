@@ -1,5 +1,9 @@
 package edu.wgu.qam2schedulingapp.model;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public enum Month {
     JANUARY("1", "January"),
     FEBRUARY("2", "February"),

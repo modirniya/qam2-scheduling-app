@@ -3,6 +3,10 @@ package edu.wgu.qam2schedulingapp.helper;
 
 import java.sql.*;
 
+/**
+ * @author Parham Modirniya
+ */
+
 public class SqlHelper {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -46,7 +50,7 @@ public class SqlHelper {
             return statement.executeQuery(strStatement);
         } catch (SQLException e) {
             Logs.error(TAG, "SQL exception occurred while executing statement ->"
-                    + strStatement + "\n" + e.getMessage());
+                            + strStatement + "\n" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
