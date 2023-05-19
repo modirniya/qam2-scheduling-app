@@ -14,8 +14,8 @@ public class SqlHelper {
     private static final String dbName = "client_schedule";
     private static final String jbdcUrl = protocol + vendor + location + dbName;
     private static final String driver = "com.mysql.cj.jdbc.Driver";
-    private static final String username = "root";
-    private static final String password = "12345";
+    private static final String username = "sqlUser"; // sqlUser - root
+    private static final String password = "Passw0rd!"; // Passw0rd! - 12345
     private static Connection connection = null;
     private static final String TAG = "SqlDatabase";
 

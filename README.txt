@@ -13,9 +13,9 @@ MySQL Connector/J: mysql-connector-java-8.0.33
 
 Directions to run the program:
 1. Open the project in IntelliJ IDEA.
-2. Ensure that JavaFX library is added to the project structure.
-3. Make sure MySQL Connector/J is set up correctly.
-4. Run the 'Main' class located in the 'edu.wgu.qam2schedulingapp' package.
+2. This project uses Maven that manages dependencies automatically,
+    ensure that you have it installed.
+3. Run the 'Main' class located in the 'edu.wgu.qam2schedulingapp' package.
 
 Description of the additional report (part A3f):
 The additional report that was implemented provides a count of the total number

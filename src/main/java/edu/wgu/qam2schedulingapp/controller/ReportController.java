@@ -170,6 +170,15 @@ public class ReportController implements Initializable {
         stage.close();
     }
 
+    public void onTabSelectionChange(Event event) {
+        if (isInitComplete) {
+            if (event.getSource() == tabContact) onTargetContactChange();
+            else if (event.getSource() == tabTypeMonth) onTargetMonthChange();
+            else if (event.getSource() == tabUserYear) onTargetYearChange();
+            updateSizeLabel();
+        }
+    }
+
     private Callback<TableColumn<Appointment, Date>, TableCell<Appointment, Date>> tableDateFormatFactory() {
         return col -> new TableCell<>() {
             @Override
@@ -189,14 +198,5 @@ public class ReportController implements Initializable {
                     setText(user.getUsername());
             }
         };
-    }
-
-    public void onTabSelectionChange(Event event) {
-        if (isInitComplete) {
-            if (event.getSource() == tabContact) onTargetContactChange();
-            else if (event.getSource() == tabTypeMonth) onTargetMonthChange();
-            else if (event.getSource() == tabUserYear) onTargetYearChange();
-            updateSizeLabel();
-        }
     }
 }
